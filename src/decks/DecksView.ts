@@ -38,8 +38,11 @@ export class DecksView extends ItemView {
     containerEl.empty();
     containerEl.createEl("h3", { text: "Decks" });
 
-    const decks = this.manager.getDeckList();
+    new ButtonComponent(containerEl)
+      .setButtonText("Create Deck")
+      .onClick(() => this.openCreateModal());
 
+    const decks = this.manager.getDeckList();
     decks.forEach(deck => {
       const deckEl = containerEl.createDiv({ cls: "deck-item" });
       deckEl.createEl("span", { text: deck });
@@ -52,10 +55,6 @@ export class DecksView extends ItemView {
         .setButtonText("Delete")
         .onClick(() => this.manager.deleteDeck(deck).then(() => this.renderDecks()));
     });
-
-    new ButtonComponent(containerEl)
-      .setButtonText("Create Deck")
-      .onClick(() => this.openCreateModal());
   }
 
   openCreateModal() {
