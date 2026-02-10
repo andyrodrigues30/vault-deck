@@ -1,4 +1,4 @@
-import { Modal, Notice } from "obsidian";
+import { App, Modal, Notice } from "obsidian";
 import { Flashcard } from "../utils/flashcardUtils";
 import VaultDeckPlugin from "../main";
 
@@ -8,7 +8,7 @@ export class ReviewModal extends Modal {
     currentIndex = 0;
     showingFront = true;
 
-    constructor(app, plugin: VaultDeckPlugin, cards: Flashcard[]) {
+    constructor(app: App, plugin: VaultDeckPlugin, cards: Flashcard[]) {
         super(app);
         this.plugin = plugin;
         this.cards = cards;
@@ -36,9 +36,14 @@ export class ReviewModal extends Modal {
 
     private showCard(): void {
         const card = this.cards[this.currentIndex];
+        if (!card) {
+            console.warn(`No card at index ${this.currentIndex}`);
+            return;
+        }
         this.showingFront = true;
         this.renderCard(card);
     }
+
 
     private renderCard(card: Flashcard): void {
         const { contentEl } = this;

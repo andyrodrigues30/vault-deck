@@ -27,28 +27,31 @@ export async function getAllFlashcards(
     const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
     if (!yamlMatch) continue;
 
-    const yaml = parseYaml(yamlMatch[1]);
+    const yaml = yamlMatch?.[1] ? parseYaml(yamlMatch[1]) : undefined;
+
+    if (!yaml) {
+      console.warn("No YAML match found!");
+      continue; // skip this iteration
+    }
+
     if (yaml.type !== "flashcard") continue;
 
-    // Front (tolerant)
     const frontMatch = content.match(
       /##\s*Front\s*\n([\s\S]*?)(?:\n---|\n##\s*Back)/
     );
-
-    // Back
     const backMatch = content.match(
       /##\s*Back\s*\n([\s\S]*)$/
     );
 
+    const frontText = frontMatch?.[1] ? frontMatch[1].trim() : "";
+    const backText = backMatch?.[1] ? backMatch[1].trim() : "";
+
     cards.push({
       file,
       type: yaml.type,
-      deck:
-        typeof yaml.deck === "string"
-          ? yaml.deck
-          : plugin.settings.defaultDeck,
-      front: frontMatch?.[1].trim() ?? "",
-      back: backMatch?.[1].trim() ?? "",
+      deck: typeof yaml.deck === "string" ? yaml.deck : plugin.settings.defaultDeck,
+      front: frontText,
+      back: backText,
       interval: yaml.interval ?? 0,
       due: yaml.due,
       lastReviewed: yaml.lastReviewed,

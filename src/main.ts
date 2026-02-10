@@ -30,10 +30,15 @@ export default class VaultDeckPlugin extends Plugin {
       (leaf) => new DecksView(leaf, this)
     );
 
-    this.app.workspace.getRightLeaf(false).setViewState({
+    const rightLeaf = this.app.workspace.getRightLeaf(false);
+    if (rightLeaf) {
+      rightLeaf.setViewState({
         type: DECKS_VIEW_TYPE,
         active: true,
-    });
+      });
+    } else {
+      console.warn("No right leaf available!");
+    }
 
     // ----------------------------
     // Register Settings Tab
