@@ -15,45 +15,54 @@ export class DecksView extends ItemView {
     this.manager = new DecksManager(plugin);
   }
 
-  getViewType(): string {
-    return DECKS_VIEW_TYPE;
-  }
+  getViewType(): string { return DECKS_VIEW_TYPE }
 
-  getDisplayText(): string {
-    return "Decks";
-  }
+  getDisplayText(): string { return "Decks" }
 
-  getIcon(): IconName {
-    return "layers"
-  }
+  getIcon(): IconName { return "layers" }
 
   async onOpen(): Promise<void> {
     this.renderDecks();
   }
 
-  async onClose(): Promise<void> {}
+  async onClose(): Promise<void> { }
 
-  renderDecks() {
+  async renderDecks() {
     const { containerEl } = this;
     containerEl.empty();
+    containerEl.style.padding = "1em";
     containerEl.createEl("h3", { text: "Decks" });
 
     new ButtonComponent(containerEl)
       .setButtonText("Create Deck")
       .onClick(() => this.openCreateModal());
 
-    const decks = this.manager.getDeckList();
+    const decks = await this.manager.getDeckList();
+
     decks.forEach(deck => {
       const deckEl = containerEl.createDiv({ cls: "deck-item" });
-      deckEl.createEl("span", { text: deck });
+      deckEl.style.paddingTop = "1em";
+      deckEl.style.paddingBottom = "1em";
+      deckEl.createEl("span", { text: `${deck.name} (${deck.due}/${deck.total})` });
+      deckEl.style.display = "flex";
+      deckEl.style.justifyContent = "space-between";
 
-      new ButtonComponent(deckEl)
+      const deckBtnsEl = deckEl.createDiv({ cls: "deck-btns" });
+      deckEl.style.display = "flex";
+      deckEl.style.justifyContent = "space-between";
+
+      const renameBtn = new ButtonComponent(deckBtnsEl)
         .setButtonText("Rename")
-        .onClick(() => this.openRenameModal(deck));
+        .onClick(() => this.openRenameModal(deck.name));
+      renameBtn.buttonEl.style.marginLeft = "1em";
+      renameBtn.buttonEl.style.marginRight = "1em";
 
-      new ButtonComponent(deckEl)
+
+      const deleteBtn = new ButtonComponent(deckBtnsEl)
         .setButtonText("Delete")
-        .onClick(() => this.manager.deleteDeck(deck).then(() => this.renderDecks()));
+        .onClick(() => this.manager.deleteDeck(deck.name).then(() => this.renderDecks()));
+      deleteBtn.buttonEl.style.marginLeft = "1em";
+      deleteBtn.buttonEl.style.marginRight = "1em";
     });
   }
 
