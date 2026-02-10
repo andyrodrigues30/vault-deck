@@ -31,7 +31,7 @@ export function registerReviewCommands(plugin: VaultDeckPlugin) {
  * @param plugin Plugin instance
  * @param onlyDue Review only due cards
  */
-async function startReview(plugin: VaultDeckPlugin, onlyDue = false) {
+export async function startReview(plugin: VaultDeckPlugin, onlyDue = false) {
   let cards: Flashcard[] = await getAllFlashcards(plugin);
 
   if (onlyDue) cards = filterDueFlashcards(cards);

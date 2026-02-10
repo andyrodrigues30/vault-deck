@@ -61,6 +61,23 @@ export async function getAllFlashcards(
   return cards;
 }
 
+export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    return allCards.length;
+}
+
+export async function getDueFlashcards(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    const dueCards = filterDueFlashcards(allCards);
+    return dueCards.length;
+}
+
+export async function getDeckCount(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
+    return deckNames.length;
+}
+
 export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
   const now = new Date();
 
