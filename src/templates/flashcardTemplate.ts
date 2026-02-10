@@ -2,22 +2,21 @@ export function createFlashcardTemplate(
   deck: string,
   backContent: string = ""
 ): string {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString();
 
   return `---
 type: flashcard
 deck: ${deck}
+lastReviewed: ${today}
 due: ${today}
 interval: 1
-lastReviewed: ${today}
 ---
 
-> [!Front]
+## Front
 
 
 ---
 
-> [!Back]
-> ${backContent}
-`;
+## Back
+${backContent}`;
 }

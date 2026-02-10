@@ -58,14 +58,12 @@ async function createFlashcardFile(
 
   let content = contentOverride ?? createFlashcardTemplate(deck);
 
-  // Ensure Front block has a starting '> ' line safely
+  // Ensure Front block has a starting '## ' line safely
   const lines = content.split("\n");
-  const frontIndex = lines.findIndex(line => line.includes("> [!Front]"));
+  const frontIndex = lines.findIndex(line => line.includes("## Front"));
 
   if (frontIndex >= 0) {
-    // Insert '> ' only if the next line doesn't exist or doesn't start with '> '
-    if (!lines[frontIndex + 1] || !lines[frontIndex + 1].startsWith("> ")) {
-      lines.splice(frontIndex + 1, 0, "> ");
+    if (!lines[frontIndex + 1]) {
       content = lines.join("\n");
     }
   }
@@ -94,13 +92,13 @@ async function openFlashcardAndFocus(
 
   const editor: Editor = view.editor;
 
-  // Find the line with > [!Front]
+  // Find the line with ## Front
   const content = editor.getValue();
   const lines = content.split("\n");
-  const frontLine = lines.findIndex(line => line.includes("> [!Front]"));
+  const frontLine = lines.findIndex(line => line.includes("## Front"));
 
   if (frontLine >= 0) {
-    // Move cursor to the line below Front marker, after '> '
-    editor.setCursor({ line: frontLine + 1, ch: 2 });
+    // Move cursor to the line below Front marker
+    editor.setCursor({ line: frontLine + 1, ch: 0 });
   }
 }

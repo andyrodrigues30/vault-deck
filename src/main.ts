@@ -2,6 +2,7 @@ import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { registerCreateCommands } from "./commands/createFlashcard";
 import { DECKS_VIEW_TYPE, DecksView } from "./decks/DecksView";
 import { VaultDeckSettings, DEFAULT_SETTINGS } from "settings/settings";
+import { registerReviewCommands } from "commands/reviewFlashcards";
 
 // ----------------------------
 // Main Plugin Class
@@ -16,9 +17,10 @@ export default class VaultDeckPlugin extends Plugin {
     await this.loadSettings();
 
     // ----------------------------
-    // Register Flashcard Create Commands
+    // Register Flashcard Commands
     // ----------------------------
     registerCreateCommands(this);
+    registerReviewCommands(this);
 
     // ----------------------------
     // Register Decks Side Panel
