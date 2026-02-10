@@ -1,6 +1,7 @@
 import { App, Modal, Notice } from "obsidian";
 import { Flashcard } from "../utils/flashcardUtils";
 import VaultDeckPlugin from "../main";
+import { focusCursor } from "commands/createFlashcard";
 
 export class ReviewModal extends Modal {
     plugin: VaultDeckPlugin;
@@ -64,7 +65,29 @@ export class ReviewModal extends Modal {
         cardEl.style.backgroundColor = "var(--background-primary)";
         cardEl.style.position = "relative"; // for absolute buttons
 
-        // Text content
+
+        // Top button container (absolute bottom)
+        const topContainer = contentEl.createEl("div");
+        topContainer.style.position = "absolute";
+        topContainer.style.top = "40px";
+        topContainer.style.left = "40px";
+        topContainer.className = "top-container";
+
+        const editBtn = cardEl.createEl("button", { text: "Edit" });
+        editBtn.style.fontSize = ".5em";
+        editBtn.style.cursor = "pointer";
+        editBtn.style.padding = "1em";
+        editBtn.onclick = () => {
+            // close flashcard
+            this.close();
+
+            // open and move cursor to correct position
+            const side = this.showingFront ? "front" : "back"
+            this.editCard(side, card);
+        };
+
+
+        // text content
         const textEl = cardEl.createEl("div", {
             text: this.showingFront ? card.front : card.back,
         });
@@ -173,5 +196,14 @@ export class ReviewModal extends Modal {
             return;
         }
         this.showCard();
+    }
+
+    private async editCard(side: string, card: Flashcard) {
+        this.close();
+        // Open flashcard
+        await this.plugin.app.workspace.getLeaf(true).openFile(card.file);
+
+        // focus cursor
+        await focusCursor(this.plugin, side);
     }
 }

@@ -78,9 +78,16 @@ async function openFlashcardAndFocus(
   plugin: FlashcardsPlugin,
   filePath: string
 ) {
-  // Open the file (returns void)
+  // Open the file
   await plugin.app.workspace.openLinkText(filePath, "", true);
+  await focusCursor(plugin, "front");
+}
 
+export async function focusCursor(
+  plugin: FlashcardsPlugin,
+  side: string
+) {
+  console.log(side)
   // Get the active leaf
   const leaf = plugin.app.workspace.getMostRecentLeaf();
   if (!leaf) return;
@@ -95,10 +102,18 @@ async function openFlashcardAndFocus(
   // Find the line with ## Front
   const content = editor.getValue();
   const lines = content.split("\n");
-  const frontLine = lines.findIndex(line => line.includes("## Front"));
 
-  if (frontLine >= 0) {
-    // Move cursor to the line below Front marker
-    editor.setCursor({ line: frontLine + 1, ch: 0 });
+  let cursorLine = 0;
+  if (side === "front") {
+    cursorLine = lines.findIndex(line => line.includes("## Front"));
+  } else {
+    cursorLine = lines.findIndex(line => line.includes("## Back"));
+  }
+
+  console.log(cursorLine)
+
+  if (cursorLine >= 0) {
+    // Move cursor to the line below
+    editor.setCursor({ line: cursorLine + 2, ch: 0 });
   }
 }
