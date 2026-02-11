@@ -1,8 +1,122 @@
-/*
+/* DecksView */
+.panel {
+    padding: 1em;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.panel-totals {
+    padding: .5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2em;
+    line-height: .025em;
+}
 
-If your plugin does not need CSS, delete this file.
+.panel-totals-cards,
+.panel-totals-due,
+.panel-totals-decks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
 
-*/
+.panel-totals-cards-text,
+.panel-totals-due-text,
+.panel-totals-decks-text {
+    font-size: .5em;
+}
+
+.panel-create-btn {
+    width: 100%;
+}
+
+.panel-decks {
+    padding: 1em 0;
+}
+
+.panel-deck-item {
+    padding: .005em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-deck-item-text {
+    width: 100%;
+    padding: .25em;
+}
+
+.panel-deck-item-btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.panel-deck-item-btn-rename,
+.panel-deck-item-btn-delete {
+    margin: 0 1em;
+}
+
+.panel-deck-item-btn-rename {
+    color: #F00;
+}
+
+
+/* Review Modal */
+.review-modal {
+    width: 700px;
+    height: 500px;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.review-modal-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    font-size: 1.5em;
+    background-color: var(--background-primary);
+    cursor: pointer;
+    user-select: none;
+}
+
+.review-modal-card-top {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.review-modal-card-top-edit {
+    padding: 1em;
+    font-size: .5em;
+    cursor: pointer;
+}
+
+.review-modal-card-content {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.review-modal-card-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+}
+
+.review-modal-card-bottom-btns {
+    padding: 1em;
+    font-size: 1em;
+    cursor: pointer;
+}

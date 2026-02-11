@@ -24,7 +24,7 @@ export class DecksView extends ItemView {
   getIcon(): IconName { return "layers" }
 
   async onOpen(): Promise<void> {
-    this.renderDecks();
+    await this.renderDecks();
   }
 
   async onClose(): Promise<void> { }
@@ -32,94 +32,57 @@ export class DecksView extends ItemView {
   async renderDecks() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.style.padding = "1em";
-    containerEl.createEl("h3", { text: "Decks" });
-    
+
+    const panelDiv = containerEl.createEl("div", { cls: "panel" })
+    panelDiv.createEl("h3", { text: "Decks" });
+
     const totalCards = await getTotalFlashcards(this.plugin);
     const totalDue = await getDueFlashcards(this.plugin);
     const totalDecks = await getDeckCount(this.plugin);
-    
-    const totalsDiv = containerEl.createDiv({ cls: "panel-totals" });
-    totalsDiv.style.display = "flex";
-    totalsDiv.style.alignItems = "center";
-    totalsDiv.style.justifyContent = "space-between";
-    totalsDiv.style.fontSize = "2em";
-    totalsDiv.style.lineHeight = ".025em";
-    totalsDiv.style.padding = ".5em";
 
-
-    const tCardDiv = totalsDiv.createDiv({ cls: "t-cards" })
+    const totalsDiv = panelDiv.createEl("div", { cls: "panel-totals" });
+    const tCardDiv = totalsDiv.createEl("div", { cls: "panel-totals-cards" });
     tCardDiv.createEl("p", { text: `${totalCards}` });
-    tCardDiv.style.display = "flex";
-    tCardDiv.style.flexDirection = "column";
-    tCardDiv.style.alignItems = "center";
-    tCardDiv.style.justifyContent = "start";
+    tCardDiv.createEl("p", { text: "Cards", cls: "panel-totals-cards-text" });
 
-    const tCardLabel = tCardDiv.createEl("p", { text: "cards" });
-    tCardLabel.style.fontSize = ".5em";
-
-    const tDueDiv = totalsDiv.createDiv({ cls: "t-due" })
+    const tDueDiv = totalsDiv.createEl("div", { cls: "panel-totals-due" })
     tDueDiv.createEl("p", { text: `${totalDue}` });
-    tDueDiv.style.display = "flex";
-    tDueDiv.style.flexDirection = "column";
-    tDueDiv.style.alignItems = "center";
-    tDueDiv.style.justifyContent = "start";
+    tDueDiv.createEl("p", { text: "Due", cls: "panel-totals-due-text" });
 
-    const tDueLabel = tDueDiv.createEl("p", { text: "due" });
-    tDueLabel.style.fontSize = ".5em";
-
-    const tDecksDiv = totalsDiv.createDiv({ cls: "t-decks" })
+    const tDecksDiv = totalsDiv.createEl("div", { cls: "panel-totals-decks" })
     tDecksDiv.createEl("p", { text: `${totalDecks}` });
-    tDecksDiv.style.display = "flex";
-    tDecksDiv.style.flexDirection = "column";
-    tDecksDiv.style.alignItems = "center";
-    tDecksDiv.style.justifyContent = "start";
+    tDecksDiv.createEl("p", { text: "Decks", cls: "panel-totals-decks-text" });
 
-    const tDecksLabel = tDecksDiv.createEl("p", { text: "decks" });
-    tDecksLabel.style.fontSize = ".5em";
-
-    new ButtonComponent(containerEl)
-      .setButtonText("Create Deck")
+    new ButtonComponent(panelDiv)
+      .setButtonText("Create deck")
+      .setClass("panel-create-btn")
       .onClick(() => this.openCreateModal());
 
     const decks = await this.manager.getDeckList();
-
-    const decksContainerEl = containerEl.createDiv({ cls: "decks" });
-    decksContainerEl.style.paddingTop = "1em";
-    decksContainerEl.style.paddingBottom = "1em";
+    panelDiv.createEl("div", { cls: "panel-decks" });
 
     decks.forEach(deck => {
-      const deckEl = containerEl.createDiv({ cls: "deck-item" });
-      deckEl.style.paddingTop = ".15em";
-      deckEl.style.paddingBottom = ".15em";
-      deckEl.style.display = "flex";
-      deckEl.style.alignItems = "center";
-      deckEl.style.justifyContent = "space-between";
-      const deckText = deckEl.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})` });
-      deckText.style.width = "100%"
-      deckText.style.padding = ".25em"
-      deckText.onClickEvent(() => {
-        console.log(`Review ${deck.name}`);
-        startReview(this.plugin);
+      const deckDiv = panelDiv.createEl("div", { cls: "panel-deck-item" });
+      const deckText = deckDiv.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})`, cls: "panel-deck-item-text" });
+      deckText.onClickEvent(async () => {
+        console.warn(`Review ${deck.name}`);
+        await startReview(this.plugin);
       });
 
-      const deckBtnsEl = deckEl.createDiv({ cls: "deck-btns" });
-      deckBtnsEl.style.display = "flex";
-      deckBtnsEl.style.justifyContent = "space-between";
-
-      const renameBtn = new ButtonComponent(deckBtnsEl)
+      const deckBtnsDiv = deckDiv.createEl("div", { cls: "panel-deck-item-btns" });
+      new ButtonComponent(deckBtnsDiv)
         .setButtonText("Rename")
+        .setClass("panel-deck-item-btn-rename")
         .onClick(() => this.openRenameModal(deck.name));
-      renameBtn.buttonEl.style.marginLeft = "1em";
-      renameBtn.buttonEl.style.marginRight = "1em";
 
 
-      const deleteBtn = new ButtonComponent(deckBtnsEl)
+      new ButtonComponent(deckBtnsDiv)
         .setButtonText("Delete")
-        .onClick(() => this.manager.deleteDeck(deck.name).then(() => this.renderDecks()));
-      deleteBtn.buttonEl.style.marginLeft = "1em";
-      deleteBtn.buttonEl.style.marginRight = "1em";
-      deleteBtn.buttonEl.style.color = "#FF0000";
+        .setClass("panel-deck-item-btn-delete")
+        .onClick(async () => {
+          await this.manager.deleteDeck(deck.name)
+            .then(() => this.renderDecks())
+        });
     });
   }
 
