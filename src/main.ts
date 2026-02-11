@@ -1,9 +1,9 @@
 import { Plugin } from "obsidian";
 import { registerCreateCommands } from "./commands/createFlashcard";
-import { DECKS_VIEW_TYPE, DecksView } from "./decks/DecksView";
-import { VaultDeckSettings, DEFAULT_SETTINGS } from "settings/settings";
 import { registerReviewCommands } from "commands/reviewFlashcards";
+import { VaultDeckSettings, DEFAULT_SETTINGS } from "settings/settings";
 import { VaultDeckSettingsTab } from "settings/SettingsTab";
+import { DECKS_VIEW_TYPE, DecksView } from "./decks/DecksView";
 
 // main plugin class
 export default class VaultDeckPlugin extends Plugin {
