@@ -26,13 +26,10 @@ export class ReviewModal extends Modal {
 
     private setModalSize() {
         // Set fixed modal dimensions
-        const modalEl = this.contentEl.parentElement; // modal container
+        const modalEl = this.contentEl.parentElement;
         if (!modalEl) return;
 
-        modalEl.style.width = "700px";
-        modalEl.style.height = "500px";
-        modalEl.style.maxWidth = "90vw";
-        modalEl.style.maxHeight = "90vh";
+        modalEl.addClass("review-modal");
     }
 
     private showCard(): void {
@@ -50,83 +47,44 @@ export class ReviewModal extends Modal {
         const { contentEl } = this;
         contentEl.empty();
 
-        // Card fills the modal
-        const cardEl = contentEl.createEl("div");
-        cardEl.style.display = "flex";
-        cardEl.style.justifyContent = "center";
-        cardEl.style.alignItems = "center";
-        cardEl.style.textAlign = "center";
-        cardEl.style.flexDirection = "column";
-        cardEl.style.cursor = "pointer";
-        cardEl.style.userSelect = "none";
-        cardEl.style.fontSize = "1.5em";
-        cardEl.style.width = "100%";
-        cardEl.style.height = "100%";
-        cardEl.style.backgroundColor = "var(--background-primary)";
-        cardEl.style.position = "relative"; // for absolute buttons
+        // card fills the modal
+        const cardDiv = contentEl.createEl("div", { cls: "review-modal-card" });
+        
+        // top button
+        const topBtnDiv = cardDiv.createEl("div", { cls: "review-modal-card-top" });
+        const editBtn = topBtnDiv.createEl("button", { text: "Edit", cls: "review-modal-card-top-edit" });
 
-
-        // Top button container (absolute bottom)
-        const topContainer = contentEl.createEl("div");
-        topContainer.style.position = "absolute";
-        topContainer.style.top = "40px";
-        topContainer.style.left = "40px";
-        topContainer.className = "top-container";
-
-        const editBtn = cardEl.createEl("button", { text: "Edit" });
-        editBtn.style.fontSize = ".5em";
-        editBtn.style.cursor = "pointer";
-        editBtn.style.padding = "1em";
-        editBtn.onclick = () => {
+        editBtn.onclick = async () => {
             // close flashcard
             this.close();
-
             // open and move cursor to correct position
             const side = this.showingFront ? "front" : "back"
-            this.editCard(side, card);
+            await this.editCard(side, card);
         };
-
 
         // text content
-        const textEl = cardEl.createEl("div", {
+        const cardText = cardDiv.createEl("p", {
             text: this.showingFront ? card.front : card.back,
+            cls: "review-modal-card-content"
         });
-        textEl.style.whiteSpace = "pre-wrap";
-        textEl.style.wordBreak = "break-word";
-        textEl.style.flex = "1"; // take available vertical space
-        textEl.style.display = "flex";
-        textEl.style.alignItems = "center";
-        textEl.style.justifyContent = "center";
 
-        contentEl.appendChild(cardEl);
+        // interval buttons
+        const bottomBtnDiv = contentEl.createEl("div", { cls: "review-modal-card-bottom" });
 
-        // Interval button container (absolute bottom)
-        const intervalContainer = contentEl.createEl("div");
-        intervalContainer.style.position = "absolute";
-        intervalContainer.style.bottom = "20px";
-        intervalContainer.style.left = "50%";
-        intervalContainer.style.transform = "translateX(-50%)";
-        intervalContainer.style.display = "flex";
-        intervalContainer.style.gap = "15px";
-        intervalContainer.className = "interval-container";
-
-        contentEl.appendChild(intervalContainer);
-
-        // Click anywhere to flip
-        cardEl.onclick = () => {
+        // click card to flip
+        cardDiv.onclick = () => {
             this.showingFront = !this.showingFront;
-            textEl.setText(this.showingFront ? card.front : card.back);
-
-            // Show interval icons only on back
-            this.updateIntervalButtons(card, !this.showingFront, intervalContainer);
+            cardText.setText(this.showingFront ? card.front : card.back);
+            // Show interval btns only on back
+            this.updateIntervalButtons(card, !this.showingFront, bottomBtnDiv);
         };
-
-        // Initially hide interval icons
-        this.updateIntervalButtons(card, false, intervalContainer);
+        
+        // initially hide interval icons
+        this.updateIntervalButtons(card, false, bottomBtnDiv);
     }
 
-    private updateIntervalButtons(card: Flashcard, show: boolean, container: HTMLElement) {
-        container.empty();
+    private updateIntervalButtons(card: Flashcard, show: boolean, bottomBtnDiv: HTMLElement) {
+        bottomBtnDiv.empty();
 
         if (!show) return;
 
@@ -137,10 +95,7 @@ export class ReviewModal extends Modal {
         ];
 
         intervals.forEach(({ difficulty, days }) => {
-            const btn = container.createEl("button", { text: difficulty });
-            btn.style.fontSize = "1em";
-            btn.style.cursor = "pointer";
-            btn.style.padding = "1em";
+            const btn = bottomBtnDiv.createEl("button", { text: difficulty, cls: "review-modal-card-bottom-btns" });
             btn.onclick = () => this.markCard(card, days);
         });
     }
@@ -200,7 +155,7 @@ export class ReviewModal extends Modal {
 
     private async editCard(side: string, card: Flashcard) {
         this.close();
-        // Open flashcard
+        // open flashcard md file
         await this.plugin.app.workspace.getLeaf(true).openFile(card.file);
 
         // focus cursor
