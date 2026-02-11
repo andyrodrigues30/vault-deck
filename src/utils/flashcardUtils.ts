@@ -27,6 +27,7 @@ export async function getAllFlashcards(
     const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
     if (!yamlMatch) continue;
 
+    // TODO: fix eslint errors
     const yaml = yamlMatch?.[1] ? parseYaml(yamlMatch[1]) : undefined;
 
     if (!yaml) {

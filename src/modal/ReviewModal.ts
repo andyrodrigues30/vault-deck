@@ -113,6 +113,7 @@ export class ReviewModal extends Modal {
 
         const content = await app.vault.read(card.file);
 
+        // TODO: fix eslint errors
         const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
         let yaml: Record<string, any> = {};
         let frontBackContent = content;
