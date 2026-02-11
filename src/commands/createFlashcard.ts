@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { Editor, MarkdownView } from "obsidian";
 import FlashcardsPlugin from "../main";
 import { ensureFolder } from "../utils/ensureFolder";
 import { createFlashcardTemplate } from "../templates/flashcardTemplate";
@@ -22,31 +22,23 @@ export function registerCreateCommands(
 
 async function createFlashcard(plugin: FlashcardsPlugin) {
   const deck = plugin.settings.defaultDeck;
+  // create file
   const file = await createFlashcardFile(plugin, deck);
-
-  // Open file and focus cursor under Front marker
+  // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
 }
 
-async function createFlashcardFromSelection(
-  plugin: FlashcardsPlugin,
-  editor: Editor
-) {
+async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Editor) {
   const selection = editor.getSelection();
   const deck = plugin.settings.defaultDeck;
-
+  // create file with template
   const content = createFlashcardTemplate(deck, selection);
   const file = await createFlashcardFile(plugin, deck, content);
-
-  // Open file and focus cursor under Front marker
+  // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
 }
 
-async function createFlashcardFile(
-  plugin: FlashcardsPlugin,
-  deck: string,
-  contentOverride?: string
-) {
+async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, contentOverride?: string) {
   const root = plugin.settings.decksRootFolder;
   const deckPath = `${root}/${deck}`;
 
@@ -58,7 +50,7 @@ async function createFlashcardFile(
 
   let content = contentOverride ?? createFlashcardTemplate(deck);
 
-  // Ensure Front block has a starting '## ' line safely
+  // ensure front section starts with '## Front'
   const lines = content.split("\n");
   const frontIndex = lines.findIndex(line => line.includes("## Front"));
 
@@ -71,35 +63,21 @@ async function createFlashcardFile(
   return plugin.app.vault.create(filePath, content);
 }
 
-// ------------------------------------------
-// Utility to focus cursor under Front marker
-// ------------------------------------------
-async function openFlashcardAndFocus(
-  plugin: FlashcardsPlugin,
-  filePath: string
-) {
-  // Open the file
+// focus cursor under front heading
+async function openFlashcardAndFocus(plugin: FlashcardsPlugin, filePath: string) {
+  // open file and focus cursor
   await plugin.app.workspace.openLinkText(filePath, "", true);
   await focusCursor(plugin, "front");
 }
 
-export async function focusCursor(
-  plugin: FlashcardsPlugin,
-  side: string
-) {
-  console.log(side)
-  // Get the active leaf
+export async function focusCursor(plugin: FlashcardsPlugin, side: string) {
   const leaf = plugin.app.workspace.getMostRecentLeaf();
   if (!leaf) return;
-
   const view = leaf.view;
-
-  // Make sure it's a MarkdownView to safely access editor
   if (!(view instanceof MarkdownView)) return;
-
   const editor: Editor = view.editor;
 
-  // Find the line with ## Front
+  // find line with ## Front
   const content = editor.getValue();
   const lines = content.split("\n");
 
@@ -110,10 +88,8 @@ export async function focusCursor(
     cursorLine = lines.findIndex(line => line.includes("## Back"));
   }
 
-  console.log(cursorLine)
-
   if (cursorLine >= 0) {
-    // Move cursor to the line below
+    // move cursor to the line below
     editor.setCursor({ line: cursorLine + 2, ch: 0 });
   }
 }
