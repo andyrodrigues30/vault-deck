@@ -11,7 +11,7 @@ export default class VaultDeckPlugin extends Plugin {
   settings: VaultDeckSettings;
 
   async onload() {
-    console.log("Loading Vault Decks Plugin");
+    console.debug("Loading Vault Decks Plugin");
 
     // Load settings
     await this.loadSettings();
