@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "vault-deck",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "A native Obsidian plugin for creating and reviewing flashcards using plain Markdown files.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
@@ -11,7 +11,8 @@
 		"lint": "eslint ."
 	},
 	"keywords": [],
-	"license": "0-BSD",
+	"author": "Andrea Rodrigues",
+	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
 		"esbuild": "0.25.5",
