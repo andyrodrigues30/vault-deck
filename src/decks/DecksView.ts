@@ -3,7 +3,7 @@ import VaultDeckPlugin from "../main";
 import { startReview } from "commands/reviewFlashcards";
 import { getDeckCount, getDueFlashcards, getTotalFlashcards } from "utils/flashcardUtils";
 import { DecksManager } from "./DecksManager";
-import { DeckNameModal } from "./DecksModal";
+import { DeckNameModal } from "../modal/DecksModal";
 
 export const DECKS_VIEW_TYPE = "decks-view";
 
@@ -87,18 +87,25 @@ export class DecksView extends ItemView {
   }
 
   openCreateModal() {
-    const modal = new DeckNameModal(this.plugin.app, async (name) => {
-      await this.manager.createDeck(name);
-      this.renderDecks();
+    const modal = new DeckNameModal(this.plugin.app, (name) => {
+      void (async () => {
+        await this.manager.createDeck(name);
+        await this.renderDecks();
+      })();
     });
+
     modal.open();
   }
 
   openRenameModal(oldName: string) {
-    const modal = new DeckNameModal(this.plugin.app, async (newName) => {
-      await this.manager.renameDeck(oldName, newName);
-      this.renderDecks();
+    const modal = new DeckNameModal(this.plugin.app, (newName) => {
+      void (async () => {
+        await this.manager.renameDeck(oldName, newName);
+        await this.renderDecks();
+      })();
     });
+
     modal.open();
   }
+
 }

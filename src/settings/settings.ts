@@ -1,6 +1,4 @@
-// ----------------------------
-// Plugin Settings Interface
-// ----------------------------
+// plugin settings
 
 export interface VaultDeckSettings {
   decksRootFolder: string;

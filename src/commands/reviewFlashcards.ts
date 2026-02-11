@@ -1,13 +1,10 @@
 import { Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { getAllFlashcards, filterDueFlashcards, Flashcard } from "../utils/flashcardUtils";
-import { ReviewModal } from "../review/ReviewModal";
+import { ReviewModal } from "../modal/ReviewModal";
 
-/**
- * Register all review commands for VaultDeckPlugin
- */
 export function registerReviewCommands(plugin: VaultDeckPlugin) {
-  // Review all flashcards (all decks)
+  // review all flashcards (all decks)
   plugin.addCommand({
     id: "review-flashcards-all",
     name: "Review flashcards",
@@ -16,7 +13,7 @@ export function registerReviewCommands(plugin: VaultDeckPlugin) {
     },
   });
 
-  // Review due flashcards (all decks)
+  // review due flashcards (all decks)
   plugin.addCommand({
     id: "review-flashcards-due",
     name: "Review flashcards due",
@@ -26,16 +23,10 @@ export function registerReviewCommands(plugin: VaultDeckPlugin) {
   });
 }
 
-/**
- * Start a review session
- * @param plugin Plugin instance
- * @param onlyDue Review only due cards
- */
 export async function startReview(plugin: VaultDeckPlugin, onlyDue = false) {
   let cards: Flashcard[] = await getAllFlashcards(plugin);
 
   if (onlyDue) cards = filterDueFlashcards(cards);
-
 
   if (!cards.length) {
     new Notice("No flashcards to review.");

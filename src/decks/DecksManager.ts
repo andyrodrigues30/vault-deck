@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { getAllFlashcards, filterDueFlashcards } from "../utils/flashcardUtils";
-
+import { ConfirmDeleteModal } from "modal/ConfirmModal";
 
 export class DecksManager {
   plugin: VaultDeckPlugin;
@@ -33,33 +33,40 @@ export class DecksManager {
 
   async deleteDeck(name: string) {
     const folderPath = `${this.plugin.settings.decksRootFolder}/${name}`;
-    if (confirm(`Are you sure you want to delete deck "${name}" and all its cards?`)) {
-      const folder = this.plugin.app.vault.getAbstractFileByPath(folderPath);
-      if (folder) {
-        await this.plugin.app.vault.delete(folder);
+    const folder = this.plugin.app.vault.getAbstractFileByPath(folderPath);
+
+    if (!folder) {
+      new Notice(`Deck "${name}" not found`);
+      return;
+    }
+
+    new ConfirmDeleteModal(
+      this.plugin.app,
+      `Are you sure you want to delete deck "${name}" and all its cards?`,
+      async () => {
+        await this.plugin.app.fileManager.trashFile(folder);
         new Notice(`Deck "${name}" deleted`);
       }
-    }
+    ).open();
   }
-
 
   async getDeckList(): Promise<{ name: string; total: number; due: number }[]> {
     const decksRoot = this.plugin.settings.decksRootFolder;
 
-    // Get all markdown files under the decks root
+    // get all md files under the decks root
     const files = this.plugin.app.vault.getFiles().filter(
       f => f.path.startsWith(decksRoot) && f.extension === "md"
     );
 
-    // Extract unique deck names
+    // extract unique deck names
     const deckNames = Array.from(new Set(
       files.map(f => f.path.split("/")[1])
     ));
 
-    // Get all flashcards vault-wide
+    // get all flashcards
     const allCards = await getAllFlashcards(this.plugin);
 
-    // Build array with total and due counts
+    // build array with total and due counts
     const decks = deckNames.map(deckName => {
       const deckCards = allCards.filter(c => c.deck === deckName);
       const dueCards = filterDueFlashcards(deckCards);

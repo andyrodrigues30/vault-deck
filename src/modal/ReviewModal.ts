@@ -1,7 +1,7 @@
 import { App, Modal, Notice } from "obsidian";
-import { Flashcard } from "../utils/flashcardUtils";
 import VaultDeckPlugin from "../main";
 import { focusCursor } from "commands/createFlashcard";
+import { Flashcard } from "../utils/flashcardUtils";
 
 export class ReviewModal extends Modal {
     plugin: VaultDeckPlugin;
@@ -113,6 +113,7 @@ export class ReviewModal extends Modal {
 
         const content = await app.vault.read(card.file);
 
+        // TODO: fix eslint errors
         const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
         let yaml: Record<string, any> = {};
         let frontBackContent = content;
