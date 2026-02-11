@@ -3,6 +3,13 @@
 
 This plugin provides lightweight spaced repetition, deck-based organization, and fast review workflows without relying on external databases or proprietary formats.
 
+## Design Philosophy
+- Obsidian-native
+- Markdown-only storage
+- Minimal but effective spaced repetition
+- No external dependencies
+- Easy to extend and customize
+
 ## Features
 - Markdown-first flashcards (one file per card)
 - Folder and metadata-based decks
@@ -46,12 +53,12 @@ All scheduling logic is stored directly in frontmatter for transparency and manu
 
 ## Commands
 ### Create Commands
-- Create flashcard - Creates a new blank flashcard Markdown file using the default deck and template.
-- Create flashcard selection - Creates a new flashcard with the current editor selection inserted into the Back section and the cursor placed in the Front section.
+- `Create flashcard` - Creates a new blank flashcard Markdown file using the default deck and template.
+- `Create flashcard selection` - Creates a new flashcard with the current editor selection inserted into the Back section and the cursor placed in the Front section.
 
 ### Review Commands
-- Review flashcards - Review all flashcards across all decks.
-- Review flashcards due - Review all flashcards that are currently due across all decks.
+- `Review flashcards` - Review all flashcards across all decks.
+- `Review flashcards due` - Review all flashcards that are currently due across all decks.
 
 ## Review System
 ### Review Flow
@@ -82,9 +89,9 @@ The plugin provides an optional right-side panel with an overview of flashcard a
 
 ### Panel Information
 - Total number of flashcards
-- Number of cards currently due
-- Number of cards
-- Number of decks
+- Total umber of cards due
+- Total number of cards
+- Total number of decks
 - List of decks with total cards and total due
 
 ### Panel Actions
@@ -104,13 +111,7 @@ The plugin includes a settings tab for configuration.
 interface FlashcardSettings {
   decksRootFolder: string;
   defaultDeck: string;
-  fileNameFormat: "timestamp" | "prompt";
 }
 ```
-
-## Design Philosophy
-- Obsidian-native
-- Markdown-only storage
-- Minimal but effective spaced repetition
-- No external dependencies
-- Easy to extend and customize
+## Licence
+MIT
