@@ -26,6 +26,7 @@ async function createFlashcard(plugin: FlashcardsPlugin) {
   const file = await createFlashcardFile(plugin, deck);
   // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
+  // TODO: refresh panel
 }
 
 async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Editor) {
@@ -36,6 +37,7 @@ async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Ed
   const file = await createFlashcardFile(plugin, deck, content);
   // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
+  // TODO: refresh panel
 }
 
 async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, contentOverride?: string) {
