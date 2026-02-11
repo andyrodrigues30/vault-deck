@@ -12,8 +12,8 @@
     line-height: .025em;
 }
 
-.panel-totals-cards
-.panel-totals-due
+.panel-totals-cards,
+.panel-totals-due,
 .panel-totals-decks {
     display: flex;
     flex-direction: column;
@@ -21,10 +21,14 @@
     justify-content: start;
 }
 
-.panel-totals-cards-text
-.panel-totals-due-text
+.panel-totals-cards-text,
+.panel-totals-due-text,
 .panel-totals-decks-text {
     font-size: .5em;
+}
+
+.panel-create-btn {
+    width: 100%;
 }
 
 .panel-decks {
@@ -32,7 +36,7 @@
 }
 
 .panel-deck-item {
-    padding: 15em 0;
+    padding: .005em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -48,7 +52,8 @@
     justify-content: space-between;
 }
 
-.panel-deck-item-btn-rename.panel-deck-item-btn-delete {
+.panel-deck-item-btn-rename,
+.panel-deck-item-btn-delete {
     margin: 0 1em;
 }
 

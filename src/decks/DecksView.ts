@@ -24,7 +24,7 @@ export class DecksView extends ItemView {
   getIcon(): IconName { return "layers" }
 
   async onOpen(): Promise<void> {
-    this.renderDecks();
+    await this.renderDecks();
   }
 
   async onClose(): Promise<void> { }
@@ -55,6 +55,7 @@ export class DecksView extends ItemView {
 
     new ButtonComponent(panelDiv)
       .setButtonText("Create deck")
+      .setClass("panel-create-btn")
       .onClick(() => this.openCreateModal());
 
     const decks = await this.manager.getDeckList();
