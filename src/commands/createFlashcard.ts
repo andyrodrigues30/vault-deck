@@ -6,12 +6,14 @@ import { createFlashcardTemplate } from "../templates/flashcardTemplate";
 export function registerCreateCommands(
   plugin: FlashcardsPlugin
 ) {
+  // create flashcard
   plugin.addCommand({
     id: "create-flashcard",
     name: "Create flashcard",
     callback: () => createFlashcard(plugin)
   });
 
+  // create flashcard with text selection
   plugin.addCommand({
     id: "create-flashcard-selection",
     name: "Create flashcard from selection",
