@@ -1,4 +1,4 @@
-import { Modal, Notice, ButtonComponent } from "obsidian";
+import { Modal, Notice, Setting } from "obsidian";
 import VaultDeckPlugin from "../main";
 
 export class DeckNameModal extends Modal {
@@ -13,7 +13,11 @@ export class DeckNameModal extends Modal {
     const { contentEl } = this;
     contentEl.createEl("h3", { text: "Enter deck name" });
 
-    const inputEl = contentEl.createEl("input", { type: "text" });
+    const inputEl = contentEl.createEl("input", {
+      type: "text",
+      cls: "rename-modal-input",
+      placeholder: "Deck name..."
+    });
     inputEl.focus();
 
     inputEl.addEventListener("keydown", (evt) => {
@@ -23,9 +27,12 @@ export class DeckNameModal extends Modal {
       }
     });
 
-    new ButtonComponent(contentEl)
-      .setButtonText("Submit")
-      .onClick(() => this.submit(inputEl.value));
+    new Setting(contentEl)
+      .addButton((btn) =>
+        btn
+          .setButtonText("Submit").onClick(() => this.close())
+          .onClick(() => this.submit(inputEl.value))
+      );
   }
 
   submit(name: string) {
