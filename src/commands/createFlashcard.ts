@@ -3,9 +3,7 @@ import FlashcardsPlugin from "../main";
 import { ensureFolder } from "../utils/ensureFolder";
 import { createFlashcardTemplate } from "../templates/flashcardTemplate";
 
-export function registerCreateCommands(
-  plugin: FlashcardsPlugin
-) {
+export function registerCreateCommands(plugin: FlashcardsPlugin) {
   // create flashcard
   plugin.addCommand({
     id: "create-flashcard",
