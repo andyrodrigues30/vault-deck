@@ -1,7 +1,7 @@
 import { App, Modal, Notice } from "obsidian";
-import { Flashcard } from "../utils/flashcardUtils";
 import VaultDeckPlugin from "../main";
 import { focusCursor } from "commands/createFlashcard";
+import { Flashcard } from "../utils/flashcardUtils";
 
 export class ReviewModal extends Modal {
     plugin: VaultDeckPlugin;

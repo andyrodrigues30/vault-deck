@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { getAllFlashcards, filterDueFlashcards, Flashcard } from "../utils/flashcardUtils";
-import { ReviewModal } from "../review/ReviewModal";
+import { ReviewModal } from "../modal/ReviewModal";
 
 export function registerReviewCommands(plugin: VaultDeckPlugin) {
   // review all flashcards (all decks)

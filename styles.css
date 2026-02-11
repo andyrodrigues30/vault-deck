@@ -1,4 +1,4 @@
-/* DecksView */
+/* Decks View */
 .panel {
     padding: 1em;
 }
@@ -52,13 +52,12 @@
     justify-content: space-between;
 }
 
-.panel-deck-item-btn-rename,
-.panel-deck-item-btn-delete {
+.panel-deck-item-btn-rename {
     margin: 0 1em;
 }
 
-.panel-deck-item-btn-rename {
-    color: #F00;
+.panel-deck-item-btn-delete {
+    color: #FF0000 !important;
 }
 
 

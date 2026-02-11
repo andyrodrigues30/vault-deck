@@ -23,7 +23,7 @@ export async function getAllFlashcards(
   for (const file of files) {
     const content = await plugin.app.vault.read(file);
 
-    // Frontmatter
+    // frontmatter
     const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
     if (!yamlMatch) continue;
 
@@ -31,7 +31,7 @@ export async function getAllFlashcards(
 
     if (!yaml) {
       console.warn("No YAML match found!");
-      continue; // skip this iteration
+      continue;
     }
 
     if (yaml.type !== "flashcard") continue;
