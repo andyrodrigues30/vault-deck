@@ -92,11 +92,13 @@ export class DecksView extends ItemView {
       const deckEl = containerEl.createDiv({ cls: "deck-item" });
       deckEl.style.paddingTop = ".15em";
       deckEl.style.paddingBottom = ".15em";
-      deckEl.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})` });
       deckEl.style.display = "flex";
       deckEl.style.alignItems = "center";
       deckEl.style.justifyContent = "space-between";
-      deckEl.onClickEvent(() => {
+      const deckText = deckEl.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})` });
+      deckText.style.width = "100%"
+      deckText.style.padding = ".25em"
+      deckText.onClickEvent(() => {
         console.log(`Review ${deck.name}`);
         startReview(this.plugin);
       });
