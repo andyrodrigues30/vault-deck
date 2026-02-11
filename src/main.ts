@@ -10,14 +10,8 @@ export default class VaultDeckPlugin extends Plugin {
   settings: VaultDeckSettings;
 
   async onload() {
-<<<<<<< Updated upstream
-    console.log("Loading Vault Decks Plugin");
-
-    // Load settings
-=======
     console.debug("Loading Vault Decks Plugin");
     // load settings
->>>>>>> Stashed changes
     await this.loadSettings();
 
     // register commands
