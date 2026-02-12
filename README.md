@@ -32,12 +32,13 @@ interval: 1
 ---
 
 ## Front
-What is the powerhouse of the cell?
+What is a network?
 
 ---
 
 ## Back
-The mitochondria.
+A group of two ore more devices connected together through wires or witelessly to communicate and/or share resources.
+
 ```
 
 ### Frontmatter Properties
