@@ -75,7 +75,6 @@ export class DecksView extends ItemView {
         .setClass("panel-deck-item-btn-rename")
         .onClick(() => this.openRenameModal(deck.name));
 
-
       new ButtonComponent(deckBtnsDiv)
         .setButtonText("Delete")
         .setClass("panel-deck-item-btn-delete")
@@ -107,5 +106,4 @@ export class DecksView extends ItemView {
 
     modal.open();
   }
-
 }

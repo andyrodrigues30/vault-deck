@@ -21,6 +21,7 @@ export async function getAllFlashcards(
   const cards: Flashcard[] = [];
 
   for (const file of files) {
+    // TODO: #8 move everything in for loop to readFlashCardContent(file)
     const content = await plugin.app.vault.read(file);
 
     // frontmatter
@@ -62,11 +63,25 @@ export async function getAllFlashcards(
   return cards;
 }
 
+// TODO: #8 export async function getAllFlashcards() {}
+// TODO: #8 export async function readFlashcardContent(file) {}
+
+export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
+  const now = new Date();
+
+  return cards.filter(card => {
+    if (!card.due) return true;
+    return new Date(card.due) <= now;
+  });
+}
+
+// get stats
 export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<number> {
     const allCards = await getAllFlashcards(plugin);
     return allCards.length;
 }
 
+// TODO: #10 rename to getDueFlashcardsCount
 export async function getDueFlashcards(plugin: VaultDeckPlugin): Promise<number> {
     const allCards = await getAllFlashcards(plugin);
     const dueCards = filterDueFlashcards(allCards);
@@ -77,13 +92,4 @@ export async function getDeckCount(plugin: VaultDeckPlugin): Promise<number> {
     const allCards = await getAllFlashcards(plugin);
     const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
     return deckNames.length;
-}
-
-export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
-  const now = new Date();
-
-  return cards.filter(card => {
-    if (!card.due) return true;
-    return new Date(card.due) <= now;
-  });
 }

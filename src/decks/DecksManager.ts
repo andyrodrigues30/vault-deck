@@ -14,6 +14,7 @@ export class DecksManager {
     const folderPath = `${this.plugin.settings.decksRootFolder}/${name}`;
     await this.plugin.app.vault.createFolder(folderPath);
     new Notice(`Deck "${name}" created!`);
+    // TODO: #10 Refresh side panel
   }
 
   async renameDeck(oldName: string, newName: string) {
@@ -27,8 +28,9 @@ export class DecksManager {
     }
 
     await this.plugin.app.vault.rename(folder, newPath);
-    // TODO: update deck property in all files in folder
+    // TODO: #7 update deck property in all files in folder
     new Notice(`Deck renamed to "${newName}"`);
+    // TODO: #10 Refresh side panel
   }
 
   async deleteDeck(name: string) {
@@ -46,6 +48,7 @@ export class DecksManager {
       async () => {
         await this.plugin.app.fileManager.trashFile(folder);
         new Notice(`Deck "${name}" deleted`);
+        // TODO: #10 Refresh side panel
       }
     ).open();
   }

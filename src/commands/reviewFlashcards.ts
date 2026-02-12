@@ -24,7 +24,7 @@ export function registerReviewCommands(plugin: VaultDeckPlugin) {
 }
 
 export async function startReview(plugin: VaultDeckPlugin, onlyDue = false) {
-  // TODO: get all AND for specific deck
+  // TODO: #8 get all AND for specific deck
   let cards: Flashcard[] = await getAllFlashcards(plugin);
 
   if (onlyDue) cards = filterDueFlashcards(cards);
