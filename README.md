@@ -89,8 +89,7 @@ The plugin provides an optional right-side panel with an overview of flashcard a
 
 ### Panel Information
 - Total number of flashcards
-- Total umber of cards due
-- Total number of cards
+- Total number of flashcards due
 - Total number of decks
 - List of decks with total cards and total due
 
