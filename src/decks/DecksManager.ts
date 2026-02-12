@@ -28,7 +28,20 @@ export class DecksManager {
     }
 
     await this.plugin.app.vault.rename(folder, newPath);
-    // TODO: #7 update deck property in all files in folder
+
+    // get all markdown files
+    const files = this.plugin.app.vault.getMarkdownFiles();
+    
+    for (const file of files) {
+      // update deck property in all files in folder
+      if (file.path.startsWith(newPath)) {
+        await this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+          if (frontmatter.deck === oldName) {
+            frontmatter.deck = newName;
+          }
+        });
+      }
+    }
     new Notice(`Deck renamed to "${newName}"`);
     // TODO: #10 Refresh side panel
   }
