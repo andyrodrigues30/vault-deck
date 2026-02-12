@@ -113,13 +113,14 @@ export class ReviewModal extends Modal {
 
         const content = await app.vault.read(card.file);
 
-        // TODO: fix eslint errors
         const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
+        // TODO: fix eslint errors
         let yaml: Record<string, any> = {};
         let frontBackContent = content;
-
+        
         if (yamlMatch) {
             try {
+                // TODO: fix eslint errors
                 yaml = (window as any).yaml?.parse(yamlMatch[1]) || {};
                 frontBackContent = content.slice(yamlMatch[0].length).trim();
             } catch {
