@@ -4,6 +4,7 @@ import { registerReviewCommands } from "commands/reviewFlashcards";
 import { VaultDeckSettings, DEFAULT_SETTINGS } from "settings/settings";
 import { VaultDeckSettingsTab } from "settings/SettingsTab";
 import { DECKS_VIEW_TYPE, DecksView } from "./decks/DecksView";
+import { moveFlashcardToDeck } from "utils/flashcardUtils";
 
 // main plugin class
 export default class VaultDeckPlugin extends Plugin {
@@ -30,6 +31,16 @@ export default class VaultDeckPlugin extends Plugin {
 
     // register settings tab
     this.addSettingTab(new VaultDeckSettingsTab(this.app, this));
+
+    // register listner
+    this.registerEvent(
+      this.app.metadataCache.on("changed", async (file) => {
+        if (file.extension !== "md") return;
+        // TODO: fix eslint errors
+        const deck = this.app.metadataCache.getFileCache(file)?.frontmatter?.deck;
+        if (deck) await moveFlashcardToDeck(this.app, file, deck, this.settings.decksRootFolder);
+      })
+    );
   }
 
   onunload() {

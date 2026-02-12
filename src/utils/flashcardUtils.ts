@@ -1,5 +1,6 @@
+import { parseYaml, TFile, App } from "obsidian";
 import VaultDeckPlugin from "../main";
-import { parseYaml, TFile } from "obsidian";
+import { ensureFolder } from "./ensureFolder";
 
 export interface Flashcard {
   file: TFile;
@@ -44,6 +45,46 @@ export async function getAllFlashcardsInDeck(
   return cards;
 }
 
+export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
+  const now = new Date();
+
+  return cards.filter(card => {
+    if (!card.due) return true;
+    return new Date(card.due) <= now;
+  });
+}
+
+// get stats
+export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    return allCards.length;
+}
+
+export async function getDueFlashcardsCount(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    const dueCards = filterDueFlashcards(allCards);
+    return dueCards.length;
+}
+
+export async function getDeckCount(plugin: VaultDeckPlugin): Promise<number> {
+    const allCards = await getAllFlashcards(plugin);
+    const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
+    return deckNames.length;
+}
+
+export async function moveFlashcardToDeck(app: App, file: TFile, newDeck: string, rootFolder: string) {
+    const folderPath = `${rootFolder}/${newDeck}`;
+    await ensureFolder(app, folderPath)
+
+    const newPath = `${folderPath}/${file.name}`;
+    
+    // check it's in the correct location
+    if (file.path === newPath) return;
+    
+    // move file
+    await app.fileManager.renameFile(file, newPath);
+}
+
 export async function readFlashcardContent(
   plugin: VaultDeckPlugin,
   file: TFile,
@@ -86,31 +127,4 @@ export async function readFlashcardContent(
       lastReviewed: yaml.lastReviewed,
     };
     cards.push(card);
-}
-
-export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
-  const now = new Date();
-
-  return cards.filter(card => {
-    if (!card.due) return true;
-    return new Date(card.due) <= now;
-  });
-}
-
-// get stats
-export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    return allCards.length;
-}
-
-export async function getDueFlashcardsCount(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    const dueCards = filterDueFlashcards(allCards);
-    return dueCards.length;
-}
-
-export async function getDeckCount(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
-    return deckNames.length;
 }
