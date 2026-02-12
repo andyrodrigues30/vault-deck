@@ -21,22 +21,48 @@ export async function getAllFlashcards(
   const cards: Flashcard[] = [];
 
   for (const file of files) {
-    // TODO: #8 move everything in for loop to readFlashCardContent(file)
-    const content = await plugin.app.vault.read(file);
+    await readFlashcardContent(plugin, file, cards);
+  }
 
+  return cards;
+}
+
+export async function getAllFlashcardsInDeck(
+  plugin: VaultDeckPlugin,
+  deckName: string
+): Promise<Flashcard[]> {
+  const files = plugin.app.vault.getMarkdownFiles();
+  const cards: Flashcard[] = [];
+
+  for (const file of files) {
+    // check if file is inside the deck folder
+    if (file.path.startsWith(`Decks/${deckName}/`)) {
+      await readFlashcardContent(plugin, file, cards);
+    }
+  }
+
+  return cards;
+}
+
+export async function readFlashcardContent(
+  plugin: VaultDeckPlugin,
+  file: TFile,
+  cards: Flashcard[]
+) {
+  const content = await plugin.app.vault.read(file);
     // frontmatter
     const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!yamlMatch) continue;
+    if (!yamlMatch) return;
 
     // TODO: fix eslint errors
     const yaml = yamlMatch?.[1] ? parseYaml(yamlMatch[1]) : undefined;
 
     if (!yaml) {
       console.warn("No YAML match found!");
-      continue;
+      return;
     }
-
-    if (yaml.type !== "flashcard") continue;
+    // TODO: fix eslint errors
+    if (yaml.type !== "flashcard") return;
 
     const frontMatch = content.match(
       /##\s*Front\s*\n([\s\S]*?)(?:\n---|\n##\s*Back)/
@@ -48,7 +74,8 @@ export async function getAllFlashcards(
     const frontText = frontMatch?.[1] ? frontMatch[1].trim() : "";
     const backText = backMatch?.[1] ? backMatch[1].trim() : "";
 
-    cards.push({
+    // TODO: fix eslint errors
+    const card = {
       file,
       type: yaml.type,
       deck: typeof yaml.deck === "string" ? yaml.deck : plugin.settings.defaultDeck,
@@ -57,14 +84,9 @@ export async function getAllFlashcards(
       interval: yaml.interval ?? 0,
       due: yaml.due,
       lastReviewed: yaml.lastReviewed,
-    });
-  }
-
-  return cards;
+    };
+    cards.push(card);
 }
-
-// TODO: #8 export async function getAllFlashcards() {}
-// TODO: #8 export async function readFlashcardContent(file) {}
 
 export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
   const now = new Date();
@@ -81,8 +103,7 @@ export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<numbe
     return allCards.length;
 }
 
-// TODO: #10 rename to getDueFlashcardsCount
-export async function getDueFlashcards(plugin: VaultDeckPlugin): Promise<number> {
+export async function getDueFlashcardsCount(plugin: VaultDeckPlugin): Promise<number> {
     const allCards = await getAllFlashcards(plugin);
     const dueCards = filterDueFlashcards(allCards);
     return dueCards.length;
