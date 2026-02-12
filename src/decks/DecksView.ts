@@ -1,7 +1,7 @@
 import { ItemView, WorkspaceLeaf, ButtonComponent, IconName } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { startReview } from "commands/reviewFlashcards";
-import { getDeckCount, getDueFlashcards, getTotalFlashcards } from "utils/flashcardUtils";
+import { getDeckCount, getDueFlashcardsCount, getTotalFlashcards } from "utils/flashcardUtils";
 import { DecksManager } from "./DecksManager";
 import { DeckNameModal } from "../modal/DecksModal";
 
@@ -37,7 +37,7 @@ export class DecksView extends ItemView {
     panelDiv.createEl("h3", { text: "Decks" });
 
     const totalCards = await getTotalFlashcards(this.plugin);
-    const totalDue = await getDueFlashcards(this.plugin);
+    const totalDue = await getDueFlashcardsCount(this.plugin);
     const totalDecks = await getDeckCount(this.plugin);
 
     const totalsDiv = panelDiv.createEl("div", { cls: "panel-totals" });
@@ -65,8 +65,7 @@ export class DecksView extends ItemView {
       const deckDiv = panelDiv.createEl("div", { cls: "panel-deck-item" });
       const deckText = deckDiv.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})`, cls: "panel-deck-item-text" });
       deckText.onClickEvent(async () => {
-        console.warn(`Review ${deck.name}`);
-        await startReview(this.plugin);
+        await startReview(this.plugin, false, deck.name);
       });
 
       const deckBtnsDiv = deckDiv.createEl("div", { cls: "panel-deck-item-btns" });
@@ -74,7 +73,6 @@ export class DecksView extends ItemView {
         .setButtonText("Rename")
         .setClass("panel-deck-item-btn-rename")
         .onClick(() => this.openRenameModal(deck.name));
-
 
       new ButtonComponent(deckBtnsDiv)
         .setButtonText("Delete")
@@ -107,5 +105,4 @@ export class DecksView extends ItemView {
 
     modal.open();
   }
-
 }
