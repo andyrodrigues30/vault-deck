@@ -1,6 +1,6 @@
 import { Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
-import { getAllFlashcards, filterDueFlashcards, Flashcard } from "../utils/flashcardUtils";
+import { getAllFlashcards, filterDueFlashcards, Flashcard, getAllFlashcardsInDeck } from "../utils/flashcardUtils";
 import { ReviewModal } from "../modal/ReviewModal";
 
 export function registerReviewCommands(plugin: VaultDeckPlugin) {
@@ -23,9 +23,15 @@ export function registerReviewCommands(plugin: VaultDeckPlugin) {
   });
 }
 
-export async function startReview(plugin: VaultDeckPlugin, onlyDue = false) {
-  // TODO: #8 get all AND for specific deck
-  let cards: Flashcard[] = await getAllFlashcards(plugin);
+export async function startReview(plugin: VaultDeckPlugin, onlyDue = false, deckName = "") {
+  let cards: Flashcard[] | [];
+  if (deckName === "") {
+    // get all flashcards
+    cards = await getAllFlashcards(plugin);
+  } else {
+    // get all flashcards in specific deck
+    cards = await getAllFlashcardsInDeck(plugin, deckName);
+  }
 
   if (onlyDue) cards = filterDueFlashcards(cards);
 
