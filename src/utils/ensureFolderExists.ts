@@ -1,6 +1,6 @@
 import { App } from "obsidian";
 
-export async function ensureFolder(
+export async function ensureFolderExists(
   app: App,
   path: string
 ) {

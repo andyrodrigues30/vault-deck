@@ -1,7 +1,7 @@
 import { App, Modal, Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { focusCursor } from "commands/createFlashcard";
-import { Flashcard } from "../utils/flashcardUtils";
+import { Flashcard, readFrontmatterAndBody } from "../utils/flashcardUtils";
 
 export class ReviewModal extends Modal {
     plugin: VaultDeckPlugin;
@@ -49,7 +49,7 @@ export class ReviewModal extends Modal {
 
         // card fills the modal
         const cardDiv = contentEl.createEl("div", { cls: "review-modal-card" });
-        
+
         // top button
         const topBtnDiv = cardDiv.createEl("div", { cls: "review-modal-card-top" });
         const editBtn = topBtnDiv.createEl("button", { text: "Edit", cls: "review-modal-card-top-edit" });
@@ -78,7 +78,7 @@ export class ReviewModal extends Modal {
             // Show interval btns only on back
             this.updateIntervalButtons(card, !this.showingFront, bottomBtnDiv);
         };
-        
+
         // initially hide interval icons
         this.updateIntervalButtons(card, false, bottomBtnDiv);
     }
@@ -101,8 +101,11 @@ export class ReviewModal extends Modal {
     }
 
     private async markCard(card: Flashcard, intervalDays: number) {
-        const { app } = this.plugin;
+        const plugin = this.plugin;
 
+        let { frontmatter, body } = await readFrontmatterAndBody(card.file, plugin);
+
+        // get new frontmatter values
         const now = new Date();
         const dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + intervalDays);
@@ -111,36 +114,20 @@ export class ReviewModal extends Modal {
         card.due = dueDate.toISOString();
         card.interval = intervalDays;
 
-        const content = await app.vault.read(card.file);
-
-        const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
-        // TODO: fix eslint errors
-        let yaml: Record<string, any> = {};
-        let frontBackContent = content;
-        
-        if (yamlMatch) {
-            try {
-                // TODO: fix eslint errors
-                yaml = (window as any).yaml?.parse(yamlMatch[1]) || {};
-                frontBackContent = content.slice(yamlMatch[0].length).trim();
-            } catch {
-                yaml = {};
-            }
-        }
-
-        yaml = Object.assign({}, yaml, {
+        frontmatter = {
+            ...frontmatter,
             type: card.type,
             deck: card.deck,
             lastReviewed: card.lastReviewed,
             due: card.due,
             interval: card.interval,
-        });
+        };
 
-        const newYaml = `---\n${Object.entries(yaml)
+        const newFrontmatter = `---\n${Object.entries(frontmatter)
             .map(([k, v]) => `${k}: ${v}`)
             .join("\n")}\n---`;
 
-        await app.vault.modify(card.file, `${newYaml}\n${frontBackContent}`);
+        await plugin.app.vault.modify(card.file, `${newFrontmatter}\n${body}`);
 
         this.nextCard();
     }

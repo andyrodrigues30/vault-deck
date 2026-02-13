@@ -1,6 +1,6 @@
 import { Editor, MarkdownView } from "obsidian";
 import FlashcardsPlugin from "../main";
-import { ensureFolder } from "../utils/ensureFolder";
+import { ensureFolderExists } from "../utils/ensureFolderExists";
 import { createFlashcardTemplate } from "../templates/flashcardTemplate";
 
 export function registerCreateCommands(plugin: FlashcardsPlugin) {
@@ -46,8 +46,8 @@ async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, conte
   const root = plugin.settings.decksRootFolder;
   const deckPath = `${root}/${deck}`;
 
-  await ensureFolder(plugin.app, root);
-  await ensureFolder(plugin.app, deckPath);
+  await ensureFolderExists(plugin.app, root);
+  await ensureFolderExists(plugin.app, deckPath);
 
   const fileName = `flashcard-${Date.now()}.md`;
   const filePath = `${deckPath}/${fileName}`;

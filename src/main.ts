@@ -36,8 +36,7 @@ export default class VaultDeckPlugin extends Plugin {
     this.registerEvent(
       this.app.metadataCache.on("changed", async (file) => {
         if (file.extension !== "md") return;
-        // TODO: fix eslint errors
-        const deck = this.app.metadataCache.getFileCache(file)?.frontmatter?.deck;
+        const deck = this.app.metadataCache.getFileCache(file)?.frontmatter?.deck as string;
         if (deck) await moveFlashcardToDeck(this.app, file, deck, this.settings.decksRootFolder);
       })
     );
