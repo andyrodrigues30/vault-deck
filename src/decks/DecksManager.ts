@@ -1,4 +1,4 @@
-import { Notice } from "obsidian";
+import { FrontMatterCache, Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { getAllFlashcards, filterDueFlashcards } from "../utils/flashcardUtils";
 import { ConfirmDeleteModal } from "modal/ConfirmModal";
@@ -35,7 +35,7 @@ export class DecksManager {
     for (const file of files) {
       // update deck property in all files in folder
       if (file.path.startsWith(newPath)) {
-        await this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        await this.plugin.app.fileManager.processFrontMatter(file, (frontmatter: FrontMatterCache) => {
           if (frontmatter.deck === oldName) {
             frontmatter.deck = newName;
           }
