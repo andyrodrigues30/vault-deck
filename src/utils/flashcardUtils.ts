@@ -1,16 +1,17 @@
-import { parseYaml, TFile, App } from "obsidian";
+import { TFile, App, getFrontMatterInfo, FrontMatterInfo } from "obsidian";
 import VaultDeckPlugin from "../main";
-import { ensureFolder } from "./ensureFolder";
+import { ensureFolderExists } from "./ensureFolderExists";
 
-export interface Flashcard {
-  file: TFile;
-
+interface Frontmatter {
   type: string;
   deck: string;
   due?: string;
   lastReviewed?: string;
   interval: number;
+}
 
+export interface Flashcard extends Frontmatter {
+  file: TFile;
   front: string;
   back: string;
 }
@@ -56,33 +57,50 @@ export function filterDueFlashcards(cards: Flashcard[]): Flashcard[] {
 
 // get stats
 export async function getTotalFlashcards(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    return allCards.length;
+  const allCards = await getAllFlashcards(plugin);
+  return allCards.length;
 }
 
 export async function getDueFlashcardsCount(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    const dueCards = filterDueFlashcards(allCards);
-    return dueCards.length;
+  const allCards = await getAllFlashcards(plugin);
+  const dueCards = filterDueFlashcards(allCards);
+  return dueCards.length;
 }
 
 export async function getDeckCount(plugin: VaultDeckPlugin): Promise<number> {
-    const allCards = await getAllFlashcards(plugin);
-    const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
-    return deckNames.length;
+  const allCards = await getAllFlashcards(plugin);
+  const deckNames = Array.from(new Set(allCards.map(c => c.deck)));
+  return deckNames.length;
 }
 
 export async function moveFlashcardToDeck(app: App, file: TFile, newDeck: string, rootFolder: string) {
-    const folderPath = `${rootFolder}/${newDeck}`;
-    await ensureFolder(app, folderPath)
+  const folderPath = `${rootFolder}/${newDeck}`;
+  await ensureFolderExists(app, folderPath)
 
-    const newPath = `${folderPath}/${file.name}`;
-    
-    // check it's in the correct location
-    if (file.path === newPath) return;
-    
-    // move file
-    await app.fileManager.renameFile(file, newPath);
+  const newPath = `${folderPath}/${file.name}`;
+
+  // check it's in the correct location
+  if (file.path === newPath) return;
+
+  // move file
+  await app.fileManager.renameFile(file, newPath);
+}
+
+export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugin) {
+  const content = await plugin.app.vault.read(file);
+
+  const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+  const info: FrontMatterInfo = getFrontMatterInfo(content);
+  
+  const body: string = info.exists ? content.slice(info.contentStart).trim() : content;
+
+  // extract Front/Back sections
+  const frontMatch = body.match(/##\s*Front\s*\n([\s\S]*?)(?:\n##\s*Back|$)/i);
+  const backMatch = body.match(/##\s*Back\s*\n([\s\S]*)$/i);
+  const frontText = frontMatch?.[1]?.trim() ?? "";
+  const backText = backMatch?.[1]?.trim() ?? "";
+
+  return { frontmatter, body, frontText, backText };
 }
 
 export async function readFlashcardContent(
@@ -90,41 +108,33 @@ export async function readFlashcardContent(
   file: TFile,
   cards: Flashcard[]
 ) {
-  const content = await plugin.app.vault.read(file);
-    // frontmatter
-    const yamlMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!yamlMatch) return;
+  const { frontmatter, frontText, backText } = await readFrontmatterAndBody(file, plugin);
 
-    // TODO: fix eslint errors
-    const yaml = yamlMatch?.[1] ? parseYaml(yamlMatch[1]) : undefined;
+  if (!frontmatter) {
+    console.warn("No frontmatter found!");
+    return;
+  }
 
-    if (!yaml) {
-      console.warn("No YAML match found!");
-      return;
-    }
-    // TODO: fix eslint errors
-    if (yaml.type !== "flashcard") return;
+  // process flashcards only
+  if (frontmatter.type !== "flashcard") return;
 
-    const frontMatch = content.match(
-      /##\s*Front\s*\n([\s\S]*?)(?:\n---|\n##\s*Back)/
-    );
-    const backMatch = content.match(
-      /##\s*Back\s*\n([\s\S]*)$/
-    );
 
-    const frontText = frontMatch?.[1] ? frontMatch[1].trim() : "";
-    const backText = backMatch?.[1] ? backMatch[1].trim() : "";
+  if (typeof frontmatter.type !== "string") return;
+  const interval = typeof frontmatter.interval === "number" ? frontmatter.interval : 0;
+  const deck = typeof frontmatter.deck === "string" ? frontmatter.deck : plugin.settings.defaultDeck
+  const due = typeof frontmatter.due === "string" ? frontmatter.due : undefined;
+  const lastReviewed = typeof frontmatter.lastReviewed === "string" ? frontmatter.lastReviewed : undefined;
 
-    // TODO: fix eslint errors
-    const card = {
-      file,
-      type: yaml.type,
-      deck: typeof yaml.deck === "string" ? yaml.deck : plugin.settings.defaultDeck,
-      front: frontText,
-      back: backText,
-      interval: yaml.interval ?? 0,
-      due: yaml.due,
-      lastReviewed: yaml.lastReviewed,
-    };
-    cards.push(card);
+  const card = {
+    file,
+    type: frontmatter.type,
+    deck: deck,
+    front: frontText,
+    back: backText,
+    interval: interval,
+    due: due,
+    lastReviewed: lastReviewed,
+  };
+
+  cards.push(card);
 }
