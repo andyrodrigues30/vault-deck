@@ -86,6 +86,10 @@ export async function moveFlashcardToDeck(app: App, file: TFile, newDeck: string
   await app.fileManager.renameFile(file, newPath);
 }
 
+export async function moveDecksLocation(decksRootFolder: string) {
+  // TODO: #27 move all deck folders to new location
+}
+
 export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugin) {
   const content = await plugin.app.vault.read(file);
 
