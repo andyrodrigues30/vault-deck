@@ -15,8 +15,6 @@ interval: 1
 ## Front
 
 
----
-
 ## Back
 ${backContent}`;
 
