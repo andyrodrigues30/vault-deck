@@ -85,7 +85,7 @@ Selecting a difficulty updates:
 - due
 - lastReviewed
 
-## Right Side Panel
+## Side Panel
 The plugin provides an optional right-side panel with an overview of flashcard activity and list of decks.
 
 ### Panel Information
@@ -104,7 +104,7 @@ The plugin provides an optional right-side panel with an overview of flashcard a
 The plugin includes a settings tab for configuration.
 
 ### Available Settings
-- Decks root folder to add new cards
+- Decks root folder containing all flashcards
 - Default deck name
 
 ```ts
