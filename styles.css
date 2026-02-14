@@ -3,11 +3,17 @@
     padding: 1em;
 }
 
+.panel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .panel-totals {
     padding: .5em;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     font-size: 2em;
     line-height: .025em;
 }

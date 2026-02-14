@@ -1,5 +1,6 @@
-import { TFile, TFolder, App, getFrontMatterInfo, FrontMatterInfo, Notice, TextComponent } from "obsidian";
+import { TFile, TFolder, App, getFrontMatterInfo, FrontMatterInfo, Notice, normalizePath } from "obsidian";
 import VaultDeckPlugin from "../main";
+import { DecksEventBus } from "decks/DecksEventBus";
 import { ensureFolderExists } from "./ensureFolderExists";
 
 interface Frontmatter {
@@ -84,9 +85,10 @@ export async function moveFlashcardToDeck(app: App, file: TFile, newDeck: string
 
   // move file
   await app.fileManager.renameFile(file, newPath);
+  
+  // refresh side panel
+  DecksEventBus.emit("refresh");
 }
-
-import { normalizePath } from "obsidian";
 
 export async function moveDecksLocation(
   app: App,
@@ -114,6 +116,9 @@ export async function moveDecksLocation(
     console.error(err);
     new Notice("Failed to move decks folder.");
   }
+
+  // refresh side panel
+  DecksEventBus.emit("refresh");
 }
 
 export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugin) {

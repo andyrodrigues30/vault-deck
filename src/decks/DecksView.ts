@@ -4,6 +4,7 @@ import { startReview } from "commands/reviewFlashcards";
 import { getDeckCount, getDueFlashcardsCount, getTotalFlashcards } from "utils/flashcardUtils";
 import { DecksManager } from "./DecksManager";
 import { DeckNameModal } from "../modal/DecksModal";
+import { DecksEventBus } from "./DecksEventBus";
 
 export const DECKS_VIEW_TYPE = "decks-view";
 
@@ -25,16 +26,30 @@ export class DecksView extends ItemView {
 
   async onOpen(): Promise<void> {
     await this.renderDecks();
+
+    DecksEventBus.on("refresh", () => {
+      void this.refresh();
+    });
   }
 
-  async onClose(): Promise<void> { }
+  async onClose(): Promise<void> {
+    DecksEventBus.emit("refresh");
+  }
+
+  async refresh() {
+    await this.renderDecks();
+  }
 
   async renderDecks() {
     const { containerEl } = this;
     containerEl.empty();
 
     const panelDiv = containerEl.createEl("div", { cls: "panel" })
-    panelDiv.createEl("h3", { text: "Decks" });
+    const topDiv = panelDiv.createEl("div", { cls: "panel-top" });
+    topDiv.createEl("h3", { text: "Decks" });
+
+    const refreshBtn = topDiv.createEl("button", { text: "Refresh" });
+    refreshBtn.onclick = () => DecksEventBus.emit("refresh");
 
     const totalCards = await getTotalFlashcards(this.plugin);
     const totalDue = await getDueFlashcardsCount(this.plugin);

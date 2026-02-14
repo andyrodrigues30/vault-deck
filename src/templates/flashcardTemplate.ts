@@ -11,7 +11,6 @@ lastReviewed: ${today}
 due: ${today}
 interval: 1
 ---
-
 ## Front
 
 
