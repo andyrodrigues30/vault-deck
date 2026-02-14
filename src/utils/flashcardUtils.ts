@@ -173,3 +173,32 @@ export async function readFlashcardContent(
 
   cards.push(card);
 }
+
+export function shuffleFlashcards(cards: Flashcard[]): Flashcard[] {
+  // copy array
+  const shuffled = [...cards];
+  const n = shuffled.length;
+
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    swapCards(shuffled, i, j);
+  }
+  
+  return shuffled;
+}
+
+// ensures both sides are non-undefined
+function swapCards<T>(arr: T[], i: number, j: number): void {
+  const a = arr[i];
+  const b = arr[j];
+
+  if (a === undefined || b === undefined) {
+    throw new Error("Array element is undefined. This should never happen.");
+  }
+  
+  arr[i] = b;
+  arr[j] = a;
+}
+
+

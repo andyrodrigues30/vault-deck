@@ -1,6 +1,6 @@
 import { Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
-import { getAllFlashcards, filterDueFlashcards, Flashcard, getAllFlashcardsInDeck } from "../utils/flashcardUtils";
+import { getAllFlashcards, filterDueFlashcards, Flashcard, getAllFlashcardsInDeck, shuffleFlashcards } from "../utils/flashcardUtils";
 import { ReviewModal } from "../modal/ReviewModal";
 
 export function registerReviewCommands(plugin: VaultDeckPlugin) {
@@ -39,6 +39,9 @@ export async function startReview(plugin: VaultDeckPlugin, onlyDue = false, deck
     new Notice("No flashcards to review.");
     return;
   }
+
+  // shuffle flashcards
+  cards = shuffleFlashcards(cards)
 
   new ReviewModal(plugin.app, plugin, cards).open();
 }
