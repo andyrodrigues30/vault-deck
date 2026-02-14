@@ -1,4 +1,4 @@
-import { TFile, App, getFrontMatterInfo, FrontMatterInfo } from "obsidian";
+import { TFile, TFolder, App, getFrontMatterInfo, FrontMatterInfo, Notice, TextComponent } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { ensureFolderExists } from "./ensureFolderExists";
 
@@ -86,8 +86,34 @@ export async function moveFlashcardToDeck(app: App, file: TFile, newDeck: string
   await app.fileManager.renameFile(file, newPath);
 }
 
-export async function moveDecksLocation(decksRootFolder: string) {
-  // TODO: #27 move all deck folders to new location
+import { normalizePath } from "obsidian";
+
+export async function moveDecksLocation(
+  app: App,
+  oldRootFolder: string,
+  newRootFolder: string
+) {
+  if (!oldRootFolder || !newRootFolder) return;
+  if (oldRootFolder === newRootFolder) return;
+
+  const oldFolder = app.vault.getAbstractFileByPath(oldRootFolder);
+  if (!(oldFolder instanceof TFolder)) return;
+
+  // check if folder exists
+  const existingTarget = app.vault.getAbstractFileByPath(newRootFolder);
+  if (existingTarget instanceof TFolder && existingTarget.children.length > 0) {
+    throw new Error("Target folder already exists and is not empty.");
+  }
+
+  const normalizedNewPath = normalizePath(newRootFolder);
+
+  try {
+    await app.fileManager.renameFile(oldFolder, normalizedNewPath);
+    new Notice("Decks folder moved successfully.");
+  } catch (err) {
+    console.error(err);
+    new Notice("Failed to move decks folder.");
+  }
 }
 
 export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugin) {
@@ -95,7 +121,7 @@ export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugi
 
   const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
   const info: FrontMatterInfo = getFrontMatterInfo(content);
-  
+
   const body: string = info.exists ? content.slice(info.contentStart).trim() : content;
 
   // extract Front/Back sections
