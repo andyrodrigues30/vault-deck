@@ -96,7 +96,7 @@ The plugin provides an optional right-side panel with an overview of flashcard a
 - Deck name button - start reviewing all cards in deck
 - Due count button - start a due-only review
 - Rename button - rename deck
-- DeleteButton - delete deck
+- Delete Button - delete deck
 
 ## Settings
 The plugin includes a settings tab for configuration.
