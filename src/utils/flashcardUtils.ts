@@ -114,6 +114,8 @@ export async function moveDecksLocation(
     console.error(err);
     new Notice("Failed to move decks folder.");
   }
+
+  // TODO: #10 Refresh side panel
 }
 
 export async function readFrontmatterAndBody(file: TFile, plugin: VaultDeckPlugin) {

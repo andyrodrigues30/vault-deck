@@ -27,7 +27,6 @@ async function createFlashcard(plugin: FlashcardsPlugin) {
   // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
   // TODO: #10 Refresh side panel
-
 }
 
 async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Editor) {

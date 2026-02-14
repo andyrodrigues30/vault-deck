@@ -96,7 +96,10 @@ export class ReviewModal extends Modal {
 
         intervals.forEach(({ difficulty, days }) => {
             const btn = bottomBtnDiv.createEl("button", { text: difficulty, cls: "review-modal-card-bottom-btns" });
-            btn.onclick = () => this.markCard(card, days);
+            btn.onclick = async () => {
+                await this.markCard(card, days);
+                // TODO: #10 Refresh side panel
+            }
         });
     }
 
