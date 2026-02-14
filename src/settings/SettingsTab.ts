@@ -1,7 +1,7 @@
 import VaultDeckPlugin from "main";
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
+import { moveDecksLocation } from "utils/flashcardUtils";
 
-// plugin settings tab
 export class VaultDeckSettingsTab extends PluginSettingTab {
   plugin: VaultDeckPlugin;
 
@@ -16,6 +16,36 @@ export class VaultDeckSettingsTab extends PluginSettingTab {
     new Setting(containerEl).setName("Configure").setHeading();
 
     new Setting(containerEl)
+      .setName("Decks root folder")
+      .setDesc("Name of folder where all decks will be stored")
+      .addText((text) => {
+        text
+          .setPlaceholder("Enter root folder name")
+          .setValue(this.plugin.settings.decksRootFolder);
+
+        text.inputEl.addEventListener("blur", () => {
+          void (async () => {
+            // move decks to new location
+            const oldVal = this.plugin.settings.decksRootFolder;
+            const newVal = text.getValue().trim();
+
+            try {
+              await moveDecksLocation(this.app, oldVal, newVal);
+              // only update setting if move succeeded
+              this.plugin.settings.decksRootFolder = newVal;
+              await this.plugin.saveSettings();
+            } catch (err) {
+              console.error(err);
+              new Notice(
+                "Cannot update root folder: folder already exists and is not empty."
+              );
+              text.setValue(oldVal);
+            }
+          })();
+        });
+      });
+
+    new Setting(containerEl)
       .setName("Default deck")
       .setDesc("Deck used when creating new flashcards if none is specified")
       .addText((text) =>
@@ -24,19 +54,6 @@ export class VaultDeckSettingsTab extends PluginSettingTab {
           .setValue(this.plugin.settings.defaultDeck)
           .onChange(async (value) => {
             this.plugin.settings.defaultDeck = value.trim();
-            await this.plugin.saveSettings();
-          })
-      );
-
-    new Setting(containerEl)
-      .setName("Decks root folder")
-      .setDesc("Name of folder where all decks will be stored")
-      .addText((text) =>
-        text
-          .setPlaceholder("Enter root folder name")
-          .setValue(this.plugin.settings.decksRootFolder)
-          .onChange(async (value) => {
-            this.plugin.settings.decksRootFolder = value.trim();
             await this.plugin.saveSettings();
           })
       );

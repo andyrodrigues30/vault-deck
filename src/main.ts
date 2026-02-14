@@ -22,11 +22,11 @@ export default class VaultDeckPlugin extends Plugin {
     // register decks side panel
     this.registerView(DECKS_VIEW_TYPE, (leaf) => new DecksView(leaf, this));
 
-    const rightLeaf = this.app.workspace.getRightLeaf(false);
-    if (rightLeaf) {
-      await rightLeaf.setViewState({ type: DECKS_VIEW_TYPE, active: true });
+    const leftLeaf = this.app.workspace.getLeftLeaf(false);
+    if (leftLeaf) {
+      await leftLeaf.setViewState({ type: DECKS_VIEW_TYPE, active: true });
     } else {
-      console.warn("No right leaf available!");
+      console.warn("No left leaf available!");
     }
 
     // register settings tab
