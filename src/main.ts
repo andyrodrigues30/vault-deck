@@ -32,7 +32,7 @@ export default class VaultDeckPlugin extends Plugin {
     // register settings tab
     this.addSettingTab(new VaultDeckSettingsTab(this.app, this));
 
-    // register listner
+    // register listners
     this.registerEvent(
       this.app.metadataCache.on("changed", async (file) => {
         if (file.extension !== "md") return;

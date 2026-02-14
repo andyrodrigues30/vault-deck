@@ -2,6 +2,7 @@ import { FrontMatterCache, Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { getAllFlashcards, filterDueFlashcards } from "../utils/flashcardUtils";
 import { ConfirmDeleteModal } from "modal/ConfirmModal";
+import { DecksEventBus } from "./DecksEventBus";
 
 export class DecksManager {
   plugin: VaultDeckPlugin;
@@ -14,7 +15,8 @@ export class DecksManager {
     const folderPath = `${this.plugin.settings.decksRootFolder}/${name}`;
     await this.plugin.app.vault.createFolder(folderPath);
     new Notice(`Deck "${name}" created!`);
-    // TODO: #10 Refresh side panel
+    // refresh side panel
+    DecksEventBus.emit("refresh");
   }
 
   async renameDeck(oldName: string, newName: string) {
@@ -42,8 +44,9 @@ export class DecksManager {
         });
       }
     }
+    // refresh side panel
+    DecksEventBus.emit("refresh");
     new Notice(`Deck renamed to "${newName}"`);
-    // TODO: #10 Refresh side panel
   }
 
   async deleteDeck(name: string) {
@@ -61,7 +64,8 @@ export class DecksManager {
       async () => {
         await this.plugin.app.fileManager.trashFile(folder);
         new Notice(`Deck "${name}" deleted`);
-        // TODO: #10 Refresh side panel
+        // refresh side panel
+        DecksEventBus.emit("refresh");
       }
     ).open();
   }

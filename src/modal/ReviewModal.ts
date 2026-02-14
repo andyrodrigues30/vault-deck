@@ -2,6 +2,7 @@ import { App, Modal, Notice } from "obsidian";
 import VaultDeckPlugin from "../main";
 import { focusCursor } from "commands/createFlashcard";
 import { Flashcard, readFrontmatterAndBody } from "../utils/flashcardUtils";
+import { DecksEventBus } from "decks/DecksEventBus";
 
 export class ReviewModal extends Modal {
     plugin: VaultDeckPlugin;
@@ -98,7 +99,8 @@ export class ReviewModal extends Modal {
             const btn = bottomBtnDiv.createEl("button", { text: difficulty, cls: "review-modal-card-bottom-btns" });
             btn.onclick = async () => {
                 await this.markCard(card, days);
-                // TODO: #10 Refresh side panel
+                // refresh side panel
+                DecksEventBus.emit("refresh");
             }
         });
     }

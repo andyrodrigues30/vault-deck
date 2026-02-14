@@ -2,6 +2,7 @@ import { Editor, MarkdownView } from "obsidian";
 import FlashcardsPlugin from "../main";
 import { ensureFolderExists } from "../utils/ensureFolderExists";
 import { createFlashcardTemplate } from "../templates/flashcardTemplate";
+import { DecksEventBus } from "decks/DecksEventBus";
 
 export function registerCreateCommands(plugin: FlashcardsPlugin) {
   // create flashcard
@@ -26,7 +27,8 @@ async function createFlashcard(plugin: FlashcardsPlugin) {
   const file = await createFlashcardFile(plugin, deck);
   // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
-  // TODO: #10 Refresh side panel
+  // refresh side panel
+  DecksEventBus.emit("refresh");
 }
 
 async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Editor) {
@@ -37,8 +39,8 @@ async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Ed
   const file = await createFlashcardFile(plugin, deck, content);
   // open file and focus cursor under front heading
   await openFlashcardAndFocus(plugin, file.path);
-  // TODO: #10 Refresh side panel
-
+  // refresh side panel
+  DecksEventBus.emit("refresh");
 }
 
 async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, contentOverride?: string) {
@@ -93,6 +95,6 @@ export async function focusCursor(plugin: FlashcardsPlugin, side: string) {
 
   if (cursorLine >= 0) {
     // move cursor to the line below
-    editor.setCursor({ line: cursorLine + 2, ch: 0 });
+    editor.setCursor({ line: cursorLine + 1, ch: 0 });
   }
 }
