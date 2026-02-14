@@ -45,9 +45,10 @@ export class DecksView extends ItemView {
     containerEl.empty();
 
     const panelDiv = containerEl.createEl("div", { cls: "panel" })
-    panelDiv.createEl("h3", { text: "Decks" });
+    const topDiv = panelDiv.createEl("div", { cls: "panel-top" });
+    topDiv.createEl("h3", { text: "Decks" });
 
-    const refreshBtn = panelDiv.createEl("button", { text: "Refresh" });
+    const refreshBtn = topDiv.createEl("button", { text: "Refresh" });
     refreshBtn.onclick = () => DecksEventBus.emit("refresh");
 
     const totalCards = await getTotalFlashcards(this.plugin);
