@@ -19,6 +19,15 @@ This plugin provides lightweight spaced repetition, deck-based organization, and
 - Right-side panel with deck and review overview
 - Fully transparent data stored in frontmatter
 
+## Commands
+### Create Commands
+- `Create flashcard` - Creates a new blank flashcard Markdown file using the default deck and template.
+- `Create flashcard selection` - Creates a new flashcard with the current editor selection inserted into the Back section and the cursor placed in the Front section.
+
+### Review Commands
+- `Review flashcards` - Review all flashcards across all decks.
+- `Review flashcards due` - Review all flashcards that are currently due across all decks.
+
 ## Flashcard Format
 Each flashcard is a standalone Markdown file with frontmatter metadata and clearly separated front and back sections.
 
@@ -33,8 +42,6 @@ interval: 1
 
 ## Front
 What is a network?
-
----
 
 ## Back
 A group of two ore more devices connected together through wires or witelessly to communicate and/or share resources.
@@ -51,15 +58,6 @@ A group of two ore more devices connected together through wires or witelessly t
 | `interval`     | number     | Review interval in days |
 
 All scheduling logic is stored directly in frontmatter for transparency and manual editing if desired.
-
-## Commands
-### Create Commands
-- `Create flashcard` - Creates a new blank flashcard Markdown file using the default deck and template.
-- `Create flashcard selection` - Creates a new flashcard with the current editor selection inserted into the Back section and the cursor placed in the Front section.
-
-### Review Commands
-- `Review flashcards` - Review all flashcards across all decks.
-- `Review flashcards due` - Review all flashcards that are currently due across all decks.
 
 ## Review System
 ### Review Flow
