@@ -1,5 +1,5 @@
 # Vault Deck
-![Build](https://github.com/andyrodrigues30/vault-deck/actions/workflows/ci.yml/badge.svg)
+![build](https://github.com/andyrodrigues30/vault-deck/actions/workflows/ci.yml/badge.svg)
 ![version](https://img.shields.io/github/v/release/andyrodrigues30/vault-deck?branch=main)
 ![license](https://img.shields.io/github/license/andyrodrigues30/vault-deck?branch=main)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
