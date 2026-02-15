@@ -1,9 +1,14 @@
 # Vault Deck
-![version](https://img.shields.io/github/v/release/andyrodrigues30/vault-deck?branch=main) ![license](https://img.shields.io/github/license/andyrodrigues30/vault-deck?branch=main)
+![Build](https://github.com/andyrodrigues30/vault-deck/actions/workflows/ci.yml/badge.svg)
+![version](https://img.shields.io/github/v/release/andyrodrigues30/vault-deck?branch=main)
+![license](https://img.shields.io/github/license/andyrodrigues30/vault-deck?branch=main)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+
 > A native Obsidian plugin for creating and reviewing flashcards using plain Markdown files.
 
 This plugin provides lightweight spaced repetition, deck-based organization, and fast review workflows without relying on external databases or proprietary formats.
+
+![demo](./docs/demo-1.0.0.gif)
 
 ## Design Philosophy
 - Obsidian-native
@@ -103,8 +108,8 @@ The plugin provides an optional right-side panel with an overview of flashcard a
 The plugin includes a settings tab for configuration.
 
 ### Available Settings
-- Decks root folder containing all flashcards
-- Default deck name
+- Decks root folder - containing all flashcards
+- Default deck name - newly created cards are saved
 
 ```ts
 interface FlashcardSettings {
@@ -112,5 +117,6 @@ interface FlashcardSettings {
   defaultDeck: string;
 }
 ```
+
 ## Licence
 MIT
