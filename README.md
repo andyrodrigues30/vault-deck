@@ -1,5 +1,5 @@
 # Vault Deck
-![version](https://img.shields.io/github/v/release/andyrodrigues30/vault-deck) ![license](https://img.shields.io/github/license/andyrodrigues30/vault-deck)
+![version](https://img.shields.io/github/v/release/andyrodrigues30/vault-deck?branch=main) ![license](https://img.shields.io/github/license/andyrodrigues30/vault-deck?branch=main)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 > A native Obsidian plugin for creating and reviewing flashcards using plain Markdown files.
 
