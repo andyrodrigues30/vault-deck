@@ -1,21 +1,18 @@
-name: Release
+name: CI
 
 on:
-  push:
-    tags:
-      - "*"
+    push:
+        branches:
+            - main
 
 jobs:
-  release:
+  ci:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Use Node.js 24
         uses: actions/setup-node@v3
         with:
@@ -29,13 +26,3 @@ jobs:
 
       - name: Build plugin
         run: npm run build
-
-      - name: Create release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            main.js
-            manifest.json
-            styles.css
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
