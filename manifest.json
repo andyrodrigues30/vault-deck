@@ -1,9 +1,9 @@
 {
 	"id": "vault-deck",
 	"name": "Vault Deck",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Create and manage markdown-native flashcards for Obsidian.",
+	"version": "1.0.1",
+	"minAppVersion": "1.0.0",
+	"description": "Create and manage markdown-native flashcards.",
 	"author": "Andrea Rodrigues",
 	"authorUrl": "https://andrearodrigues.co.uk",
 	"isDesktopOnly": false
