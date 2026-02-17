@@ -92,7 +92,6 @@
     text-align: center;
     flex-direction: column;
     font-size: 1.5em;
-    background-color: var(--background-primary);
     cursor: pointer;
     user-select: none;
 }
