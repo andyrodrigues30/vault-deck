@@ -21,7 +21,7 @@ export function registerDisplayDeckViewCommands(plugin: VaultDeckPlugin) {
   plugin.addCommand({
     id: "close-decks-info",
     name: "Close decks info",
-    callback: async () => {
+    callback: () => {
         plugin.app.workspace.detachLeavesOfType(DECKS_VIEW_TYPE);
     },
   });
