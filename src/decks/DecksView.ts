@@ -34,6 +34,7 @@ export class DecksView extends ItemView {
 
   async onClose(): Promise<void> {
     DecksEventBus.emit("refresh");
+    return Promise.resolve();
   }
 
   async refresh() {
