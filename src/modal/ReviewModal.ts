@@ -153,6 +153,6 @@ export class ReviewModal extends Modal {
         await this.plugin.app.workspace.getLeaf(true).openFile(card.file);
 
         // focus cursor
-        await focusCursor(this.plugin, side);
+        focusCursor(this.plugin, side);
     }
 }
