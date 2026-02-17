@@ -1,10 +1,10 @@
 import { Editor, MarkdownView } from "obsidian";
-import FlashcardsPlugin from "../main";
+import VaultDeckPlugin from "../main";
 import { ensureFolderExists } from "../utils/ensureFolderExists";
 import { createFlashcardTemplate } from "../templates/flashcardTemplate";
 import { DecksEventBus } from "decks/DecksEventBus";
 
-export function registerCreateCommands(plugin: FlashcardsPlugin) {
+export function registerCreateCommands(plugin: VaultDeckPlugin) {
   // create flashcard
   plugin.addCommand({
     id: "create-flashcard",
@@ -21,7 +21,7 @@ export function registerCreateCommands(plugin: FlashcardsPlugin) {
   });
 }
 
-async function createFlashcard(plugin: FlashcardsPlugin) {
+async function createFlashcard(plugin: VaultDeckPlugin) {
   const deck = plugin.settings.defaultDeck;
   // create file
   const file = await createFlashcardFile(plugin, deck);
@@ -31,7 +31,7 @@ async function createFlashcard(plugin: FlashcardsPlugin) {
   DecksEventBus.emit("refresh");
 }
 
-async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Editor) {
+async function createFlashcardFromSelection(plugin: VaultDeckPlugin, editor: Editor) {
   const selection = editor.getSelection();
   const deck = plugin.settings.defaultDeck;
   // create file with template
@@ -43,7 +43,7 @@ async function createFlashcardFromSelection(plugin: FlashcardsPlugin, editor: Ed
   DecksEventBus.emit("refresh");
 }
 
-async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, contentOverride?: string) {
+async function createFlashcardFile(plugin: VaultDeckPlugin, deck: string, contentOverride?: string) {
   const root = plugin.settings.decksRootFolder;
   const deckPath = `${root}/${deck}`;
 
@@ -69,13 +69,13 @@ async function createFlashcardFile(plugin: FlashcardsPlugin, deck: string, conte
 }
 
 // focus cursor under front heading
-async function openFlashcardAndFocus(plugin: FlashcardsPlugin, filePath: string) {
+async function openFlashcardAndFocus(plugin: VaultDeckPlugin, filePath: string) {
   // open file and focus cursor
   await plugin.app.workspace.openLinkText(filePath, "", true);
   await focusCursor(plugin, "front");
 }
 
-export async function focusCursor(plugin: FlashcardsPlugin, side: string) {
+export async function focusCursor(plugin: VaultDeckPlugin, side: string) {
   const leaf = plugin.app.workspace.getMostRecentLeaf();
   if (!leaf) return;
   const view = leaf.view;

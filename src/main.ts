@@ -1,6 +1,7 @@
 import { Plugin } from "obsidian";
 import { registerCreateCommands } from "./commands/createFlashcard";
 import { registerReviewCommands } from "commands/reviewFlashcards";
+import { registerDisplayDeckViewCommands } from "commands/openDeckView";
 import { VaultDeckSettings, DEFAULT_SETTINGS } from "settings/settings";
 import { VaultDeckSettingsTab } from "settings/SettingsTab";
 import { DECKS_VIEW_TYPE, DecksView } from "./decks/DecksView";
@@ -18,15 +19,16 @@ export default class VaultDeckPlugin extends Plugin {
     // register commands
     registerCreateCommands(this);
     registerReviewCommands(this);
+    registerDisplayDeckViewCommands(this);
 
-    // register decks side panel
+    // register DecksView panel
     this.registerView(DECKS_VIEW_TYPE, (leaf) => new DecksView(leaf, this));
 
-    const leftLeaf = this.app.workspace.getLeftLeaf(false);
-    if (leftLeaf) {
-      await leftLeaf.setViewState({ type: DECKS_VIEW_TYPE, active: true });
+    const rightLeaf = this.app.workspace.getRightLeaf(false);
+    if (rightLeaf) {
+      await rightLeaf.setViewState({ type: DECKS_VIEW_TYPE, active: true });
     } else {
-      console.warn("No left leaf available!");
+      console.warn("No right leaf available!");
     }
 
     // register settings tab
