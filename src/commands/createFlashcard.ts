@@ -72,10 +72,10 @@ async function createFlashcardFile(plugin: VaultDeckPlugin, deck: string, conten
 async function openFlashcardAndFocus(plugin: VaultDeckPlugin, filePath: string) {
   // open file and focus cursor
   await plugin.app.workspace.openLinkText(filePath, "", true);
-  await focusCursor(plugin, "front");
+  focusCursor(plugin, "front");
 }
 
-export async function focusCursor(plugin: VaultDeckPlugin, side: string) {
+export function focusCursor(plugin: VaultDeckPlugin, side: string) {
   const leaf = plugin.app.workspace.getMostRecentLeaf();
   if (!leaf) return;
   const view = leaf.view;
