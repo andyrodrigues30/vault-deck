@@ -49,7 +49,7 @@ export class DecksManager {
     new Notice(`Deck renamed to "${newName}"`);
   }
 
-  async deleteDeck(name: string) {
+  deleteDeck(name: string) {
     const folderPath = `${this.plugin.settings.decksRootFolder}/${name}`;
     const folder = this.plugin.app.vault.getAbstractFileByPath(folderPath);
 

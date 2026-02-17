@@ -93,8 +93,8 @@ export class DecksView extends ItemView {
         .setButtonText("Delete")
         .setClass("panel-deck-item-btn-delete")
         .onClick(async () => {
-          await this.manager.deleteDeck(deck.name)
-            .then(() => this.renderDecks())
+          this.manager.deleteDeck(deck.name)
+          await this.renderDecks()
         });
     });
   }
