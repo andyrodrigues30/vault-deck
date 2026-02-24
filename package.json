@@ -1,7 +1,7 @@
 {
 	"name": "vault-deck",
-	"version": "1.0.2",
-	"description": "A native Obsidian plugin for creating and reviewing flashcards using plain Markdown files.",
+	"version": "1.0.0",
+	"description": "Create and manage markdown-native flashcards.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
