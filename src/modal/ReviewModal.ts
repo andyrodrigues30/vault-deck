@@ -49,10 +49,10 @@ export class ReviewModal extends Modal {
         contentEl.empty();
 
         // card fills the modal
-        const cardDiv = contentEl.createEl("div", { cls: "review-modal-card" });
+        const cardDiv = contentEl.createDiv({ cls: "review-modal-card" });
 
         // top button
-        const topBtnDiv = cardDiv.createEl("div", { cls: "review-modal-card-top" });
+        const topBtnDiv = cardDiv.createDiv({ cls: "review-modal-card-top" });
         const editBtn = topBtnDiv.createEl("button", { text: "Edit", cls: "review-modal-card-top-edit" });
 
         editBtn.onclick = async () => {
@@ -70,7 +70,7 @@ export class ReviewModal extends Modal {
         });
 
         // interval buttons
-        const bottomBtnDiv = contentEl.createEl("div", { cls: "review-modal-card-bottom" });
+        const bottomBtnDiv = contentEl.createDiv({ cls: "review-modal-card-bottom" });
 
         // click card to flip
         cardDiv.onclick = () => {

@@ -45,8 +45,8 @@ export class DecksView extends ItemView {
     const { containerEl } = this;
     containerEl.empty();
 
-    const panelDiv = containerEl.createEl("div", { cls: "panel" })
-    const topDiv = panelDiv.createEl("div", { cls: "panel-top" });
+    const panelDiv = containerEl.createDiv({ cls: "panel" })
+    const topDiv = panelDiv.createDiv({ cls: "panel-top" });
     topDiv.createEl("h3", { text: "Decks" });
 
     const refreshBtn = topDiv.createEl("button", { text: "Refresh" });
@@ -56,16 +56,16 @@ export class DecksView extends ItemView {
     const totalDue = await getDueFlashcardsCount(this.plugin);
     const totalDecks = await getDeckCount(this.plugin);
 
-    const totalsDiv = panelDiv.createEl("div", { cls: "panel-totals" });
-    const tCardDiv = totalsDiv.createEl("div", { cls: "panel-totals-cards" });
+    const totalsDiv = panelDiv.createDiv({ cls: "panel-totals" });
+    const tCardDiv = totalsDiv.createDiv({ cls: "panel-totals-cards" });
     tCardDiv.createEl("p", { text: `${totalCards}` });
     tCardDiv.createEl("p", { text: "Cards", cls: "panel-totals-cards-text" });
 
-    const tDueDiv = totalsDiv.createEl("div", { cls: "panel-totals-due" })
+    const tDueDiv = totalsDiv.createDiv({ cls: "panel-totals-due" })
     tDueDiv.createEl("p", { text: `${totalDue}` });
     tDueDiv.createEl("p", { text: "Due", cls: "panel-totals-due-text" });
 
-    const tDecksDiv = totalsDiv.createEl("div", { cls: "panel-totals-decks" })
+    const tDecksDiv = totalsDiv.createDiv({ cls: "panel-totals-decks" })
     tDecksDiv.createEl("p", { text: `${totalDecks}` });
     tDecksDiv.createEl("p", { text: "Decks", cls: "panel-totals-decks-text" });
 
@@ -75,16 +75,16 @@ export class DecksView extends ItemView {
       .onClick(() => this.openCreateModal());
 
     const decks = await this.manager.getDeckList();
-    panelDiv.createEl("div", { cls: "panel-decks" });
+    panelDiv.createDiv({ cls: "panel-decks" });
 
     decks.forEach(deck => {
-      const deckDiv = panelDiv.createEl("div", { cls: "panel-deck-item" });
+      const deckDiv = panelDiv.createDiv({ cls: "panel-deck-item" });
       const deckText = deckDiv.createEl("p", { text: `${deck.name} (${deck.due}/${deck.total})`, cls: "panel-deck-item-text" });
       deckText.onClickEvent(async () => {
         await startReview(this.plugin, false, deck.name);
       });
 
-      const deckBtnsDiv = deckDiv.createEl("div", { cls: "panel-deck-item-btns" });
+      const deckBtnsDiv = deckDiv.createDiv({ cls: "panel-deck-item-btns" });
       new ButtonComponent(deckBtnsDiv)
         .setButtonText("Rename")
         .setClass("panel-deck-item-btn-rename")
