@@ -2,7 +2,7 @@
 	"id": "vault-deck",
 	"name": "Vault Deck",
 	"version": "1.0.0",
-	"minAppVersion": "1.0.0",
+	"minAppVersion": "1.7.2",
 	"description": "Create and manage markdown-native flashcards.",
 	"author": "Andrea Rodrigues",
 	"authorUrl": "https://andrearodrigues.co.uk",
